@@ -1,21 +1,21 @@
-version: '3.7'
+version: '3.9'
 
 services:
 
   mt:
-    build: .
-    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000 --log-config logging.yml
+    build:
+      context: .
     restart: unless-stopped
-    runtime: nvidia  # Comment out in local
+    # runtime: nvidia  # Comment out in local
     ports:
-      - 8001:8000
+      - 8000:8000
     volumes:
       - .:/app
-      - ../translation-models:/app/models
+      # - ./models:/app/models
       - ./config.json:/app/config.json
     environment:
       - MT_API_CONFIG=/app/config.json
-      - MT_API_DEVICE=gpu #or gpu, if so make runtime:nvidia
+      # - MT_API_DEVICE=gpu #or gpu, if so make runtime:nvidia
       - MT_API_THREADS=16
       - MODELS_ROOT=/app/models
       - NVIDIA_VISIBLE_DEVICES=all

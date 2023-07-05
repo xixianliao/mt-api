@@ -1,0 +1,8 @@
+venv
+.dockerignore
+.gitignore
+Dockerfile
+Makefile
+.git
+**/__pycache__
+run_local.sh

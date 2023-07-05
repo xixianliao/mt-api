@@ -184,13 +184,6 @@ By default, one model can be loaded to serve a language direction. Although, if 
 
 To use the big model while inference request, you'll need to specify an `alt` parameter as `big`. Otherwise, it'll default to the first loaded model. (Example shown later below)
 
-### Model chaining
-
-TODO...
-
-### Custom translator packages
-
-TODO...
 
 
 ## Build and run
@@ -232,17 +225,17 @@ Endpoint for translating a single phrase.
 #### cURL
 
 ```
-curl --location --request POST 'http://127.0.0.1:8001/api/v1/translate' \
+curl --location --request POST 'http://127.0.0.1:8000/api/v1/translate' \
 --header 'Content-Type: application/json' \
---data-raw '{"src":"fr", "tgt":"en", "text":"c'\''est un test"}'
+--data-raw '{"src":"ca", "tgt":"es", "text":"c'\''Això es una prova."}'
 ```
 
 #### Python
 
 ```
 import httpx
-translate_service_url = "http://127.0.0.1:8001/api/v1/translate"
-json_data = {'src':'fr', 'tgt':'en', 'text':"c'est un test."}
+translate_service_url = "http://127.0.0.1:8000/api/v1/translate"
+json_data = {"src":"ca", "tgt":"es", "text":"c'\''Això es una prova."}
 r = httpx.post(translate_service_url, json=json_data)
 response = r.json()
 print("Translation:", response['translation'])
