@@ -1,4 +1,4 @@
-# TWB-MT-fastapi
+# MT API
 
 API for serving machine translation models. 
 
@@ -257,7 +257,7 @@ curl --location --request POST 'http://127.0.0.1:8001/api/v1/translate' \
 
 ```
 import httpx
-translate_service_url = "http://127.0.0.1:8001/api/v1/translate"
+translate_service_url = "http://127.0.0.1:8000/api/v1/translate"
 json_data = {'src':'en', 'tgt':'fr', 'alt':'big', text':"this is a test."}
 r = httpx.post(translate_service_url, json=json_data)
 response = r.json()
@@ -271,7 +271,7 @@ Endpoint for translating a list of sentences.
 #### cURL
 
 ```
-curl --location --request POST 'http://127.0.0.1:8001/api/v1/translate/batch' \
+curl --location --request POST 'http://127.0.0.1:8000/api/v1/translate/batch' \
 --header 'Content-Type: application/json' \
 --data-raw '{"src":"en", "tgt":"fr", "texts":["hello twb", "this is another sentence"]}'
 ```
@@ -294,13 +294,13 @@ Retrieves a the list of supported languages and model pairs.
 #### cURL
 
 ```
-curl 'http://127.0.0.1:8001/api/v1/translate/'
+curl 'http://127.0.0.1:8000/api/v1/translate/'
 ```
 
 #### Python
 ```
 import httpx
-translate_service_url = "http://127.0.0.1:8001/api/v1/translate/"
+translate_service_url = "http://127.0.0.1:8000/api/v1/translate/"
 r = httpx.get(translate_url)
 response = r.json()
 print(response)
