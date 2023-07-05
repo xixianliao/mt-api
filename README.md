@@ -330,5 +330,19 @@ print(response)
 
 Note: The third level model list is for seeing different versions of the model. There is always a default model in the language pair with id `<src>_<tgt>` and there could be alternative models with model id `<src>_<tgt>_<alt-tag>`. 
 
+
+
 For example in the setup above, there are two alternative models in the Arabic-English direction: A default model `ar_en` and a domain specific `ar_en_domainspecific` model where domainspecific is the alternative model id. For the rest of the language pairs there is only one default model. 
 
+
+## Authors and acknowledgment
+Developed by the Language Technologies Unit in Barcelona Supercomputing Center. The code is based on [TWB-MT-fastapi](https://github.com/translatorswb/TWB-MT-fastapi) which has a GNU General Public License.
+
+## License
+GNU General Public License v3.0
+
+## Funding
+
+This work is funded by the [Generalitat de
+Catalunya](https://politiquesdigitals.gencat.cat/ca/inici/index.html#googtrans(ca|en))
+within the framework of [Projecte AINA](https://politiquesdigitals.gencat.cat/ca/economia/catalonia-ai/aina).
