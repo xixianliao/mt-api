@@ -235,7 +235,7 @@ curl --location --request POST 'http://127.0.0.1:8000/api/v1/translate' \
 ```
 import httpx
 translate_service_url = "http://127.0.0.1:8000/api/v1/translate"
-json_data = {"src":"ca", "tgt":"es", "text":"c'\''Això es una prova."}
+json_data = {"src":"ca", "tgt":"es", "text":"Això es una prova."}
 r = httpx.post(translate_service_url, json=json_data)
 response = r.json()
 print("Translation:", response['translation'])
@@ -273,7 +273,7 @@ Endpoint for translating a list of sentences.
 ```
 curl --location --request POST 'http://127.0.0.1:8000/api/v1/translate/batch' \
 --header 'Content-Type: application/json' \
---data-raw '{"src":"en", "tgt":"fr", "texts":["hello twb", "this is another sentence"]}'
+--data-raw '{"src":"ca", "tgt":"es", "texts":["This is a sentence", "this is another sentence"]}'
 ```
 
 #### Python
@@ -281,7 +281,7 @@ curl --location --request POST 'http://127.0.0.1:8000/api/v1/translate/batch' \
 ```
 import httpx
 translate_service_url = "http://127.0.0.1:8001/api/v1/translate/batch"
-json_data = {'src':'fr', 'tgt':'en', 'texts':["hello twb", "this is another sentence"]}
+json_data = {'src':'fr', 'tgt':'en', 'texts':["This is a sentence", "this is another sentence"]}
 r = httpx.post(translate_service_url, json=json_data)
 response = r.json()
 print("Translation:", response['translation'])
