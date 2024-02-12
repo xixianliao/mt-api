@@ -1,9 +1,9 @@
-fastapi==0.97.0
-uvicorn==0.22.0
+fastapi==0.109.2
+uvicorn==0.27.0.post1
 subword_nmt==0.3.8
-ctranslate2==3.16.0
-sacremoses==0.0.53
+ctranslate2==3.24.0
+sacremoses==0.1.1
 nltk==3.8.1
 sentencepiece==0.1.99
-torch==2.0.1
-transformers==4.30.2
+torch==2.2.0
+transformers==4.37.2

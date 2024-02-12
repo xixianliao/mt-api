@@ -1,9 +1,9 @@
-version ?= beta_ca_es
+version ?= v1_ca_es
 
 buildx-docker:
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
-		-t projecteaina/mt-api:${VERSION} \
+		-t projecteaina/mt-api:v1_ca_es \
 		--push \
 		.
 deploy:

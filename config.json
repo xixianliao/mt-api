@@ -17,6 +17,20 @@
         "sentencepiece": true,
         "translate": true
       }
+    },
+    {
+      "src": "es",
+      "tgt": "ca",
+      "model_type": "ctranslator2",
+      "model_path": "mt-plantl-es-ca",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "load": true,
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
     }
   ]
 }

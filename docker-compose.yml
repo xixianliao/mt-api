@@ -3,8 +3,7 @@ version: '3.9'
 services:
 
   mt:
-    build:
-      context: .
+    image: projecteaina/mt-api:v1_ca_es
     restart: unless-stopped
     # runtime: nvidia  # Comment out in local
     ports:

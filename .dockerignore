@@ -3,6 +3,7 @@ venv
 .gitignore
 Dockerfile
 Makefile
-.git
+**/.git
 **/__pycache__
+**/gitattributes
 run_local.sh
