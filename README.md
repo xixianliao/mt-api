@@ -334,6 +334,11 @@ Note: The third level model list is for seeing different versions of the model. 
 
 For example in the setup above, there are two alternative models in the Arabic-English direction: A default model `ar_en` and a domain specific `ar_en_domainspecific` model where domainspecific is the alternative model id. For the rest of the language pairs there is only one default model. 
 
+## Api Testing
+To test the api just run the next command in terminal
+```bash
+sh run_test.sh
+```
 
 ## Authors and acknowledgment
 Developed by the Language Technologies Unit in Barcelona Supercomputing Center. The code is based on [TWB-MT-fastapi](https://github.com/translatorswb/TWB-MT-fastapi) which has a GNU General Public License.
