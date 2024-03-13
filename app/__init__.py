@@ -2,9 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.helpers.config import Config
 
+from contextlib import asynccontextmanager
 
 def create_app() -> FastAPI:
-    app = FastAPI()
+    @asynccontextmanager
+    async def lifespan(application: FastAPI):
+        config = Config(load_all_models=True)
+        yield
+        
+    app = FastAPI(lifespan=lifespan)
 
     app.add_middleware(
     CORSMiddleware,
@@ -20,8 +26,5 @@ def create_app() -> FastAPI:
     app.include_router(health)
     app.include_router(translate_v1)
 
-    @app.on_event('startup')
-    async def startup_event() -> None:
-        config = Config(load_all_models=True)
-
+   
     return app
