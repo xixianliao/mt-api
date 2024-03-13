@@ -30,7 +30,7 @@ class TestTranslateApiV1(APIBaseTestCase):
                 'text': '¿Cómo estás?',
             }
             expected_translation = 'Com estàs?'
-            response = client.post(self.get_endpoint('/'), data=json.dumps(options))
+            response = client.post(self.get_endpoint('/'), content=json.dumps(options))
             assert response.status_code == status.HTTP_200_OK
             content = response.json()
             assert content['translation'] == expected_translation
@@ -41,7 +41,7 @@ class TestTranslateApiV1(APIBaseTestCase):
             'tgt': 'xyz',
             'text': 'Hello there, how are you doing?',
         }
-        response = self.client.post(self.get_endpoint('/'), data=json.dumps(options))
+        response = self.client.post(self.get_endpoint('/'), content=json.dumps(options))
         assert response.status_code == status.HTTP_406_NOT_ACCEPTABLE
 
     def test_batch_translate_text_valid_code(self):
@@ -51,7 +51,7 @@ class TestTranslateApiV1(APIBaseTestCase):
             'texts': ['Hola, ¿Cómo te llamas?', '¿Cómo estás?'],
         }
         expected_translations = ['Hola, com et dius?', 'Com estàs?']
-        response = self.client.post(url=self.get_endpoint('/batch'), data=json.dumps(options))
+        response = self.client.post(url=self.get_endpoint('/batch'), content=json.dumps(options))
         assert response.status_code == status.HTTP_200_OK
         content = response.json()
         assert content['translation'] == expected_translations
@@ -62,5 +62,5 @@ class TestTranslateApiV1(APIBaseTestCase):
             'tgt': 'xyz',
             'texts': ['Hola, ¿Cómo te llamas?', '¿Cómo estás?'],
         }
-        response = self.client.post(url=self.get_endpoint('/batch'), data=json.dumps(options))
+        response = self.client.post(url=self.get_endpoint('/batch'), content=json.dumps(options))
         assert response.status_code == status.HTTP_406_NOT_ACCEPTABLE
