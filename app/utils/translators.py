@@ -57,7 +57,9 @@ def get_batch_ctranslator(ctranslator_model_path: str) -> Callable:
     # ]
 
     def translator(src_texts, src=None, tgt=None):
-        return [s[0]['tokens'] for s in ctranslator.translate_batch(src_texts)]
+        translations = ctranslator.translate_batch(src_texts)
+        # return [s[0]['tokens'] for s in translations]
+        return translations[0].hypotheses # Modified from list reading to this, check if it's ok.
 
     return translator
 

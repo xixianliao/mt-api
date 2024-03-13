@@ -8,25 +8,41 @@ class BaseTestCase:
     def setup(self):
         self.client = TestClient(app)
         self.config_data = {
-            'languages': {
-                'en': 'English',
-                'fr': 'French',
+                "languages": {
+                    "es": "Spanish",
+                    "ca": "Catalan"
             },
-            'models': [
-                {
-                    'src': 'en',
-                    'tgt': 'fr',
-                    'model_type': 'opus',
-                    'load': True,
-                    'sentence_split': 'nltk',
-                    'pipeline': {
-                        'lowercase': True,
-                        'translate': True,
-                        'recase': True,
+            "models": [
+                    {
+                    "src": "ca",
+                    "tgt": "es",
+                    "model_type": "ctranslator2",
+                    "model_path": "mt-aina-ca-es",
+                    "src_sentencepiece_model": "spm.model",
+                    "tgt_sentencepiece_model": "spm.model",
+                    "load": True,
+                    "sentence_split": "nltk",
+                    "pipeline": {
+                        "sentencepiece": True,
+                        "translate": True
+                    }
                     },
-                },
-            ],
-        }
+                    {
+                    "src": "es",
+                    "tgt": "ca",
+                    "model_type": "ctranslator2",
+                    "model_path": "mt-plantl-es-ca",
+                    "src_sentencepiece_model": "spm.model",
+                    "tgt_sentencepiece_model": "spm.model",
+                    "load": True,
+                    "sentence_split": "nltk",
+                    "pipeline": {
+                        "sentencepiece": True,
+                        "translate": True
+                    }
+                    }
+                ]
+            }
         self.config = Config(config_data=self.config_data)
 
 
@@ -35,7 +51,6 @@ class APIBaseTestCase(BaseTestCase):
     SERVICE = 'translate'
 
     def setup(self):
-        self.client = TestClient(app)
         super().setup()
 
     def get_endpoint(self, endpoint: str = '/') -> str:

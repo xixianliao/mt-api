@@ -52,9 +52,7 @@ class Config(metaclass=Singleton):
                 return superlang
         return lang
 
-    def _get_model_path(
-        self, model_config: Dict, model_id: str
-    ) -> Optional[str]:
+    def _get_model_path(self, model_config: Dict, model_id: str) -> Optional[str]:
         model_dir = None
 
         # Check model path
@@ -75,9 +73,7 @@ class Config(metaclass=Singleton):
             )
         return model_dir
 
-    def _get_pretranslators(
-        self, model_config: Dict, model_id: str
-    ) -> Optional[str]:
+    def _get_pretranslators(self, model_config: Dict, model_id: str) -> Optional[str]:
         pretranslator_chain = []
 
         # Check model path
@@ -109,9 +105,7 @@ class Config(metaclass=Singleton):
 
         return pretranslator_chain
 
-    def _get_posttranslators(
-        self, model_config: Dict, model_id: str
-    ) -> Optional[str]:
+    def _get_posttranslators(self, model_config: Dict, model_id: str) -> Optional[str]:
         posttranslator_chain = []
 
         # Check model path
@@ -339,7 +333,6 @@ class Config(metaclass=Singleton):
             msg = '`models` directory not found. No models will be loaded.'
             logger.error(msg)
             # raise ConfigurationException(msg)
-
         if not 'models' in self.config_data:
             msg = (
                 "Model spefication list ('models') not found in configuration."

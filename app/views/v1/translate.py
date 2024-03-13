@@ -36,7 +36,7 @@ def fetch_model_data_from_request(request):
 
     if not compatible_model_ids:
         raise HTTPException(
-                status_code=406,
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail=f'Language pair {model_id} is not supported.',
             )
 
@@ -76,7 +76,6 @@ def fetch_model_data_from_request(request):
 def translate_sentence(
     request: TranslationRequest,
 ) -> TranslationResponse:
-
     model_id, src, tgt = fetch_model_data_from_request(request)
 
     translation = translate_text(model_id, request.text, src, tgt)

@@ -1,12 +1,18 @@
 import json
-
+import pytest
 from fastapi import status
+from fastapi.testclient import TestClient
+from main import app
 
 from app.tests.base_test_case import APIBaseTestCase
 
 
 class TestTranslateApiV1(APIBaseTestCase):
     API_VERSION = 1
+
+    @pytest.fixture(autouse=True)
+    def setup_before_each_test(self):
+        self.setup()
 
     def test_list_languages(self):
         response = self.client.get(url=self.get_endpoint('/'))
@@ -17,55 +23,44 @@ class TestTranslateApiV1(APIBaseTestCase):
         assert content['languages'] == self.config.language_codes
 
     def test_translate_text_valid_code(self):
-        options = {
-            'src': 'en',
-            'tgt': 'fr',
-            'text': 'Hello there, how are you doing?',
-        }
-        expected_translation = 'Bonjour, comment allez-vous?'
-        response = self.client.post(
-            self.get_endpoint('/'), data=json.dumps(options)
-        )
-        assert response.status_code == status.HTTP_200_OK
-        content = response.json()
-        assert content['translation'] == expected_translation
+        with TestClient(app) as client:
+            options = {
+                'src': 'es',
+                'tgt': 'ca',
+                'text': '¿Cómo estás?',
+            }
+            expected_translation = 'Com estàs?'
+            response = client.post(self.get_endpoint('/'), data=json.dumps(options))
+            assert response.status_code == status.HTTP_200_OK
+            content = response.json()
+            assert content['translation'] == expected_translation
 
     def test_translate_text_invalid_code(self):
         options = {
-            'src': 'en',
+            'src': 'sfs',
             'tgt': 'xyz',
             'text': 'Hello there, how are you doing?',
         }
-        response = self.client.post(
-            self.get_endpoint('/'), data=json.dumps(options)
-        )
-        assert response.status_code == status.HTTP_404_NOT_FOUND
+        response = self.client.post(self.get_endpoint('/'), data=json.dumps(options))
+        assert response.status_code == status.HTTP_406_NOT_ACCEPTABLE
 
     def test_batch_translate_text_valid_code(self):
         options = {
-            'src': 'en',
-            'tgt': 'fr',
-            'texts': ['Hello, what is your name?', 'How are you doing?'],
+            'src': 'es',
+            'tgt': 'ca',
+            'texts': ['Hola, ¿Cómo te llamas?', '¿Cómo estás?'],
         }
-        expected_translations = [
-            'Bonjour, quel est votre nom?',
-            'Comment ça va?',
-        ]
-        response = self.client.post(
-            url=self.get_endpoint('/batch'), data=json.dumps(options)
-        )
+        expected_translations = ['Hola, com et dius?', 'Com estàs?']
+        response = self.client.post(url=self.get_endpoint('/batch'), data=json.dumps(options))
         assert response.status_code == status.HTTP_200_OK
-
         content = response.json()
         assert content['translation'] == expected_translations
 
     def test_batch_translate_text_invalid_code(self):
         options = {
-            'src': 'en',
+            'src': 'es',
             'tgt': 'xyz',
-            'texts': ['Hello, what is your name?', 'How are you doing?'],
+            'texts': ['Hola, ¿Cómo te llamas?', '¿Cómo estás?'],
         }
-        response = self.client.post(
-            url=self.get_endpoint('/batch'), data=json.dumps(options)
-        )
-        assert response.status_code == status.HTTP_404_NOT_FOUND
+        response = self.client.post(url=self.get_endpoint('/batch'), data=json.dumps(options))
+        assert response.status_code == status.HTTP_406_NOT_ACCEPTABLE
