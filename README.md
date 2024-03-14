@@ -21,24 +21,32 @@ API configuration file (`config.json`) is where we specify the models to load an
 ```
 {
   "languages": {
-    "en": "English",
-    "fr": "French",
-    "tr": "Turkish"
+    "es": "Spanish",
+    "ca": "Catalan",
+    "en": "English"
   },
   "models": [
     {
-        "src": "en",
-        "tgt": "tr",
-        "model_type": "opus-big",
-        "load": true,
-        "sentence_split": "nltk", 
-        "pipeline": {
-            "translate": true
-        }
-    }
+      "src": "ca",
+      "tgt": "es",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "id...." // repo id to download the model (optional)",
+      "model_path": "model...", //model directory name under models
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "load": true,
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    ...
   ]
 }
 ```
+
+<!--
 
 ### Custom ctranslate2 model configuration
 
@@ -55,6 +63,7 @@ Add the following configuration under `models` in `config.json`:
     "src": "en",
     "tgt": "tr",
     "model_type": "ctranslator2",
+    "hugging_face_repo_id": "id...." // repo id to download the model (optional)",
     "model_path": "entr",  //model directory name under models
     "bpe_file": "bpe.en-tr.codes",
     "load": true,
@@ -183,7 +192,7 @@ By default, one model can be loaded to serve a language direction. Although, if 
 ```
 
 To use the big model while inference request, you'll need to specify an `alt` parameter as `big`. Otherwise, it'll default to the first loaded model. (Example shown later below)
-
+-->
 
 
 ## Build and run
@@ -191,8 +200,14 @@ To use the big model while inference request, you'll need to specify an `alt` pa
 Set the environment variables:
 ```
 MT_API_CONFIG=config.json
-MODELS_ROOT=../translation-models
+MODELS_ROOT=./models
 MT_API_DEVICE=cpu #or "gpu"
+```
+
+Create an environment if you want (optional)
+```
+python -m venv venv
+source venv/bin/activate
 ```
 
 ```
