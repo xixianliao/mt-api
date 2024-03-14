@@ -16,9 +16,7 @@ def translate_text(model_id: str, text: str, src: str, tgt: str) -> Optional[str
     model = config.loaded_models[model_id]
 
     if model['sentence_segmenter']:
-        sentence_batch = model['sentence_segmenter'](
-            text
-        )
+        sentence_batch = model['sentence_segmenter'](text)
     else:
         sentence_batch = [text]
 
@@ -40,9 +38,7 @@ def translate_text(model_id: str, text: str, src: str, tgt: str) -> Optional[str
     
     # Translate batch
     if model['translator']:
-        translated_sentence_batch = model[
-            'translator'
-        ](sentence_batch, src, tgt)
+        translated_sentence_batch = model['translator'](sentence_batch, src, tgt)
         if DEVDEBUG: logger.debug(f'>translate_text:Translate batch /translated_sentence_batch {translated_sentence_batch}')
     else:
         translated_sentence_batch = sentence_batch

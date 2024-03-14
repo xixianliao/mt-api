@@ -2,6 +2,7 @@ import json
 import logging
 import os
 from typing import Optional, Dict, List
+from huggingface_hub import snapshot_download
 
 from app.constants import SUPPORTED_MODEL_TYPES, MULTIMODALCODE, MODEL_TAG_SEPARATOR
 from app.exceptions import ConfigurationException, ModelLoadingException
@@ -38,7 +39,8 @@ class Config(metaclass=Singleton):
         self.messages: List[str] = []
 
         if not config_data:
-            self._validate()
+            self._validate_config_file()
+            self._validate_models()
 
         if self.load_all_models or config_data:
             self._load_language_codes()
@@ -57,15 +59,8 @@ class Config(metaclass=Singleton):
 
         # Check model path
         if 'model_path' in model_config and model_config['model_path'] and not model_config['model_type'] == 'custom':
-            model_dir = os.path.join(
-                MODELS_ROOT_DIR, model_config['model_path']
-            )
-            if not os.path.exists(model_dir):
-                self._log_warning(
-                    f'Model path {model_dir} not found for model {model_id}. '
-                    "Can't load custom translation model or segmenters."
-                )
-                model_dir = None
+            model_dir = os.path.join(MODELS_ROOT_DIR, model_config['model_path'])
+
         else:
             self._log_warning(
                 f'Model path not specified for model {model_id}. '
@@ -75,7 +70,6 @@ class Config(metaclass=Singleton):
 
     def _get_pretranslators(self, model_config: Dict, model_id: str) -> Optional[str]:
         pretranslator_chain = []
-
         # Check model path
         if 'pretranslatechain' in model_config and model_config['pretranslatechain']:
             #check if all pairs are in config
@@ -94,7 +88,7 @@ class Config(metaclass=Singleton):
                             pair_found = True
                             pretranslator_chain.append(pair)
                             break
-                if not pair_found: 
+                if not pair_found:
                     self._log_warning(
                         f'Pretranslation model {pair} not found or is not active. '
                         f'Can\'t load pretranslator chain for model {model_id}'
@@ -102,7 +96,6 @@ class Config(metaclass=Singleton):
                     return pretranslator_chain
 
             # pretranslator_chain = model_config['pretranslatechain']
-
         return pretranslator_chain
 
     def _get_posttranslators(self, model_config: Dict, model_id: str) -> Optional[str]:
@@ -139,24 +132,18 @@ class Config(metaclass=Singleton):
     def _is_valid_model_config(self, model_config: Dict) -> bool:
         # Check if model_type src and tgt fields are specified
         if 'model_type' not in model_config:
-            self._log_warning(
-                    f'`{item}` not speficied for a model. Skipping load'
-                )
+            self._log_warning(f'`{item}` not speficied for a model. Skipping load')
             return False
         if 'multilingual' not in model_config or not model_config['multilingual']:
             for item in ['src', 'tgt']:
                 if item not in model_config:
-                    self._log_warning(
-                        f'`{item}` not speficied for a model. Skipping load'
-                    )
+                    self._log_warning(f'`{item}` not speficied for a model. Skipping load')
                     return False
         return True
 
     def _is_valid_model_type(self, model_type: str) -> bool:
         if not model_type in SUPPORTED_MODEL_TYPES:
-            self._log_warning(
-                f'`model_type` not recognized: {model_type}. Skipping load'
-            )
+            self._log_warning(f'`model_type` not recognized: {model_type}. Skipping load')
             return False
         return True
 
@@ -190,6 +177,13 @@ class Config(metaclass=Singleton):
         model_id: str = get_model_id(src=src, tgt=tgt, alt_id=alt_id)
         model_dir: Optional[str] = self._get_model_path(model_config, model_id)
         pretranslatechain: List[str] = self._get_pretranslators(model_config, model_id)
+
+        repo_id: str = model_config.get('hugging_face_repo_id')
+
+        if repo_id and model_dir and not os.path.exists(model_dir): #In the case you want to try to download allways, remove not path.exists()
+            self._log_info(f'Downloading model "{model_id}"')
+            snapshot_download(repo_id=repo_id, revision="main", local_dir=os.path.join(model_dir), cache_dir='.cache')
+
         if model_config.get('pretranslatechain') and not pretranslatechain:
             return
         posttranslatechain: List[str] = self._get_posttranslators(model_config, model_id)
@@ -306,18 +300,12 @@ class Config(metaclass=Singleton):
     def _log_info(self, msg: str) -> None:
         logger.info(msg)
         self.messages.append(msg)
-
-    def _validate(self) -> None:
-        self._validate_config_file()
-        self._validate_models()
+       
 
     def _validate_config_file(self) -> None:
         # Check if config file is there and well formatted
         if not os.path.exists(self.config_file):
-            self._log_warning(
-                f'Config file {self.config_file} not found. '
-                'No models will be loaded.'
-            )
+            self._log_warning(f'Config file {self.config_file} not found. No models will be loaded.')
         else:
             try:
                 with open(self.config_file, 'r') as jsonfile:
@@ -329,16 +317,16 @@ class Config(metaclass=Singleton):
 
     def _validate_models(self) -> None:
         # Check if MODELS_ROOT_DIR exists
-        if not os.path.exists(MODELS_ROOT_DIR):
-            msg = '`models` directory not found. No models will be loaded.'
-            logger.error(msg)
-            # raise ConfigurationException(msg)
         if not 'models' in self.config_data:
-            msg = (
-                "Model spefication list ('models') not found in configuration."
-            )
+            msg = ("Model spefication list ('models') not found in configuration.")
             logger.error(msg)
             raise ConfigurationException(msg)
+        
+
+
+        # if not os.path.exists(MODELS_ROOT_DIR):
+        #     logger.error('`models` directory not found. No models will be loaded.')
+        #     # raise ConfigurationException(msg)
 
     def _validate_src_tgt(self, src: str, tgt: str) -> None:
         if not src in self.language_codes:
