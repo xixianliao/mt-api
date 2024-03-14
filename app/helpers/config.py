@@ -26,6 +26,7 @@ class Config(metaclass=Singleton):
         config_file: Optional[str] = None,
         config_data: Optional[Dict] = None,
         load_all_models: bool = False,
+        download_models:bool = True,
     ):
         self.loaded_models: Dict = {}
         self.language_codes: Dict = {}
@@ -44,7 +45,7 @@ class Config(metaclass=Singleton):
 
         if self.load_all_models or config_data:
             self._load_language_codes()
-            self._load_all_models()
+            self._load_all_models(download_models)
             self._load_languages_list()
 
     def map_lang_to_closest(self, lang: str) -> str:
@@ -147,7 +148,7 @@ class Config(metaclass=Singleton):
             return False
         return True
 
-    def _load_all_models(self) -> None:
+    def _load_all_models(self, download_models) -> None:
         for model_config in self.config_data['models']:
             if not 'load' in model_config or not model_config['load']:
                 continue
@@ -160,13 +161,24 @@ class Config(metaclass=Singleton):
                 continue
 
             try:
-                self._load_model(model_config)
+                self._load_model(model_config, download_models)
             except ModelLoadingException:
                 continue
 
         self._log_info(f'{len(self.loaded_models)} models ' + str(list(self.loaded_models.keys())))
 
-    def _load_model(self, model_config: Dict) -> None:
+
+    def _download_models(self, model_id, repo_id, model_path):
+        if repo_id:
+            self._log_info(f'Downloading model "{model_id}"')
+            snapshot_download(repo_id=repo_id, revision="main", local_dir=model_path, cache_dir='.cache')
+        else:
+            msg = f'Unable to download model {model_id}, missing: hugging_face_repo_id'
+            logger.error(msg)
+            raise ConfigurationException(msg)
+            
+
+    def _load_model(self, model_config: Dict, download) -> None:
         model_type: str = model_config.get('model_type')
         src: Optional[str] = model_config['src'] if 'src' in model_config else MULTIMODALCODE
         tgt: Optional[str] = model_config['tgt'] if 'src' in model_config else MULTIMODALCODE
@@ -178,11 +190,10 @@ class Config(metaclass=Singleton):
         model_dir: Optional[str] = self._get_model_path(model_config, model_id)
         pretranslatechain: List[str] = self._get_pretranslators(model_config, model_id)
 
-        repo_id: str = model_config.get('hugging_face_repo_id')
-
-        if repo_id and model_dir and not os.path.exists(model_dir): #In the case you want to try to download allways, remove not path.exists()
-            self._log_info(f'Downloading model "{model_id}"')
-            snapshot_download(repo_id=repo_id, revision="main", local_dir=os.path.join(model_dir), cache_dir='.cache')
+        if download:
+            repo_id: str = model_config.get('hugging_face_repo_id')
+            self._download_models(model_id=model_id, repo_id=repo_id, model_path=model_dir)
+        
 
         if model_config.get('pretranslatechain') and not pretranslatechain:
             return

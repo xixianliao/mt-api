@@ -4,10 +4,10 @@ from app.helpers.config import Config
 
 from contextlib import asynccontextmanager
 
-def create_app() -> FastAPI:
+def create_app(download_models:bool=True) -> FastAPI:
     @asynccontextmanager
     async def lifespan(application: FastAPI):
-        config = Config(load_all_models=True)
+        config = Config(load_all_models=True, download_models=download_models)
         yield
         
     app = FastAPI(lifespan=lifespan)

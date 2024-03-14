@@ -39,4 +39,5 @@ RUN python /app/nltk_pkg.py
 
 EXPOSE 8000
 
-CMD python -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-config logging.yml
+CMD python main.py --models './models'
+# -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-config logging.yml

@@ -1,47 +1,16 @@
+import json
 from fastapi.testclient import TestClient
 from main import app
 from app.helpers.config import Config
+from app.settings import (CONFIG_JSON_PATH)
 
 class BaseTestCase:
     def setup(self):
-        self.client = TestClient(app)
-        self.config_data = {
-                "languages": {
-                    "es": "Spanish",
-                    "ca": "Catalan"
-            },
-            "models": [
-                    {
-                    "src": "ca",
-                    "tgt": "es",
-                    "model_type": "ctranslator2",
-                    "model_path": "mt-aina-ca-es",
-                    "src_sentencepiece_model": "spm.model",
-                    "tgt_sentencepiece_model": "spm.model",
-                    "load": True,
-                    "sentence_split": "nltk",
-                    "pipeline": {
-                        "sentencepiece": True,
-                        "translate": True
-                    }
-                    },
-                    {
-                    "src": "es",
-                    "tgt": "ca",
-                    "model_type": "ctranslator2",
-                    "model_path": "mt-plantl-es-ca",
-                    "src_sentencepiece_model": "spm.model",
-                    "tgt_sentencepiece_model": "spm.model",
-                    "load": True,
-                    "sentence_split": "nltk",
-                    "pipeline": {
-                        "sentencepiece": True,
-                        "translate": True
-                    }
-                    }
-                ]
-            }
+        with open(CONFIG_JSON_PATH, 'r') as jsonfile:
+            self.config_data = json.load(jsonfile)
+        
         self.config = Config(config_data=self.config_data)
+        self.client = TestClient(app)
 
 
 class APIBaseTestCase(BaseTestCase):
