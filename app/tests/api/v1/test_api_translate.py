@@ -8,19 +8,18 @@ from app.tests.base_test_case import APIBaseTestCase
 
 
 class TestTranslateApiV1(APIBaseTestCase):
-    API_VERSION = 1
 
     @pytest.fixture(autouse=True)
     def setup_before_each_test(self):
         self.setup()
 
     def test_list_languages(self):
-        response = self.client.get(url=self.get_endpoint('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-        content = response.json()
-        assert content['models'] == self.config.languages_list
-        assert content['languages'] == self.config.language_codes
+        with TestClient(app) as client:
+            response = client.get(url=self.get_endpoint('/'))
+            assert response.status_code == status.HTTP_200_OK
+            content = response.json()
+            assert content['models'] == {'ca': {'es': ['ca-es']}, 'es': {'ca': ['es-ca']}}
+            assert content['languages'] == {'es': 'Spanish', 'ca': 'Catalan'}
 
     def test_translate_text_valid_code(self):
         with TestClient(app) as client:

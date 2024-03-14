@@ -5,7 +5,7 @@ from app.helpers.config import Config
 from app.utils.utils import parse_model_id, get_model_id
 from app.constants import MULTIMODALCODE
 
-DEVDEBUG = True
+DEVDEBUG = False
 logger = logging.getLogger('console_logger')
 
 # TODO: This should get text batch

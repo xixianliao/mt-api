@@ -1,45 +1,53 @@
 import pytest
+import json
 from .base_test_case import BaseTestCase
+from app.settings import (CONFIG_JSON_PATH)
+from app.helpers.config import Config
 
 
-class TestLoadModels(BaseTestCase):
+class TestLoadModels():
 
-    @pytest.fixture(autouse=True)
-    def setup_before_each_test(self):
-        self.setup()
+    def test_load_models_with_warnings(self):
+        
+        self.config_data = {
+            "languages": {
+                "es": "Spanish",
+                "ca": "Catalan"
+            },
+            "models": [
+                {
+                "src": "ca",
+                "tgt": "es",
+                "model_type": "ctranslator2",
+                "hugging_face_repo_id": "projecte-aina/mt-aina-ca-es",
+                "model_path": "mt-aina-ca-es",
+                "src_sentencepiece_model": "spm.model",
+                "tgt_sentencepiece_model": "spm.model",
+                "sentence_split": "nltk",
+                "pipeline": {
+                    "sentencepiece": True,
+                    "translate": True
+                }
+            }]
+        }
 
-    def test_load_sigle_model_with_warnings(self):
-
+        self.config = Config(config_data=self.config_data, load_all_models=True)
         # languages
         assert self.config.language_codes == {'es': 'Spanish', 'ca': 'Catalan'}
-        assert self.config.languages_list == {'ca': {'es': ['ca-es']}, 'es': {'ca': ['es-ca']}}
+        assert self.config.languages_list == {'ca': {'es': ['ca-es']}}
 
         # models
-        assert len(self.config.loaded_models) == 2
-
-        assert 'es-ca' in self.config.loaded_models
-        model1 = self.config.loaded_models['es-ca']
-        assert model1['src'] == 'es'
-        assert model1['tgt'] == 'ca'
+        assert len(self.config.loaded_models) == 1
 
         assert 'ca-es' in self.config.loaded_models
-        model2 = self.config.loaded_models['ca-es']
-        assert model2['src'] == 'ca'
-        assert model2['tgt'] == 'es'
+        model = self.config.loaded_models['ca-es']
+        assert model['src'] == 'ca'
+        assert model['tgt'] == 'es'
 
         # pipeline
-        # model1
-        assert model1['sentence_segmenter'].__name__ == 'nltk_sentence_segmenter'
-        assert len(model1['preprocessors']) == 1
-        assert len(model1['postprocessors']) == 1
-        assert 'get_sentencepiece_segmenter' in str(model1['preprocessors'])
-        assert 'get_sentencepiece_desegmenter' in str(model1['postprocessors'])
-        assert 'get_batch_ctranslator' in str(model1['translator'])
-
-        # model2
-        assert model2['sentence_segmenter'].__name__ == 'nltk_sentence_segmenter'
-        assert len(model2['preprocessors']) == 1
-        assert len(model2['postprocessors']) == 1
-        assert 'get_sentencepiece_segmenter' in str(model2['preprocessors'])
-        assert 'get_sentencepiece_desegmenter' in str(model2['postprocessors'])
-        assert 'get_batch_ctranslator' in str(model2['translator'])
+        assert model['sentence_segmenter'].__name__ == 'nltk_sentence_segmenter'
+        assert len(model['preprocessors']) == 1
+        assert len(model['postprocessors']) == 1
+        assert 'get_sentencepiece_segmenter' in str(model['preprocessors'])
+        assert 'get_sentencepiece_desegmenter' in str(model['postprocessors'])
+        assert 'get_batch_ctranslator' in str(model['translator'])

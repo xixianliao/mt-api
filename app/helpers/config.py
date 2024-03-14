@@ -27,6 +27,7 @@ class Config(metaclass=Singleton):
         config_data: Optional[Dict] = None,
         load_all_models: bool = False,
         download_models:bool = True,
+        models_to_load:list = []
     ):
         self.loaded_models: Dict = {}
         self.language_codes: Dict = {}
@@ -43,10 +44,9 @@ class Config(metaclass=Singleton):
             self._validate_config_file()
             self._validate_models()
 
-        if self.load_all_models or config_data:
-            self._load_language_codes()
-            self._load_all_models(download_models)
-            self._load_languages_list()
+        self._load_language_codes()
+        self._load_models(download_models, load_all_models, models_to_load)
+        self._load_languages_list()
 
     def map_lang_to_closest(self, lang: str) -> str:
         if '_' in lang:
@@ -148,9 +148,11 @@ class Config(metaclass=Singleton):
             return False
         return True
 
-    def _load_all_models(self, download_models) -> None:
+    def _load_models(self, download_models, load_all, models_to_load) -> None:
         for model_config in self.config_data['models']:
-            if not 'load' in model_config or not model_config['load']:
+            _, _, model_id = self._get_ser_tgt_model_id(model_config)
+
+            if not load_all and model_id not in models_to_load:
                 continue
 
             # CONFIG CHECKS
@@ -177,16 +179,19 @@ class Config(metaclass=Singleton):
             logger.error(msg)
             raise ConfigurationException(msg)
             
-
-    def _load_model(self, model_config: Dict, download) -> None:
-        model_type: str = model_config.get('model_type')
+    def _get_ser_tgt_model_id(self, model_config):
         src: Optional[str] = model_config['src'] if 'src' in model_config else MULTIMODALCODE
         tgt: Optional[str] = model_config['tgt'] if 'src' in model_config else MULTIMODALCODE
         alt_id: Optional[str] = model_config.get('alt')
+        model_id: str = get_model_id(src=src, tgt=tgt, alt_id=alt_id)
+        return src, tgt, model_id
+
+    def _load_model(self, model_config: Dict, download) -> None:
+        model_type: str = model_config.get('model_type')
+        src, tgt, model_id = self._get_ser_tgt_model_id(model_config)
         multilingual: Optional[bool] = model_config['multilingual'] if 'multilingual' in model_config else False
         supported_pairs: List[str] = model_config['supported_pairs'] if 'supported_pairs' in model_config else []
         pipeline_msg: List[str] = []
-        model_id: str = get_model_id(src=src, tgt=tgt, alt_id=alt_id)
         model_dir: Optional[str] = self._get_model_path(model_config, model_id)
         pretranslatechain: List[str] = self._get_pretranslators(model_config, model_id)
 

@@ -212,8 +212,20 @@ source venv/bin/activate
 
 ```
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001
+python main.py
 ```
+It takes two arguments both optional.
+With the argument **--load** you can specify ids for models to be loaded. If this argument contains **all** it will load all the models.
+```
+--load 'es-ca' ['ca-e' ....]
+--load 'all'
+```
+
+On the other hand, the argument **--models** is used to specify path of preexisting model, it will prevent downloading and use these preexisting models.
+```
+--models ./path_to_models
+```
+
 
 You can also run `run_local.sh` directly. 
 

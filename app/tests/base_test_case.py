@@ -1,15 +1,8 @@
-import json
 from fastapi.testclient import TestClient
 from main import app
-from app.helpers.config import Config
-from app.settings import (CONFIG_JSON_PATH)
 
 class BaseTestCase:
     def setup(self):
-        with open(CONFIG_JSON_PATH, 'r') as jsonfile:
-            self.config_data = json.load(jsonfile)
-        
-        self.config = Config(config_data=self.config_data)
         self.client = TestClient(app)
 
 
