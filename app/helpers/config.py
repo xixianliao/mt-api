@@ -310,14 +310,14 @@ class Config(metaclass=Singleton):
             try:
                 with open(self.config_file, 'r') as jsonfile:
                     self.config_data = json.load(jsonfile)
-            except json.decoder.JSONDecodeError:
+            except json.decoder.JSONDecodeError as exc:
                 msg = 'Config file format broken. No models will be loaded.'
                 logger.error(msg)
-                raise ConfigurationException(msg)
+                raise ConfigurationException(msg) from exc
 
     def _validate_models(self) -> None:
         # Check if MODELS_ROOT_DIR exists
-        if not 'models' in self.config_data:
+        if 'models' not in self.config_data:
             msg = ("Model spefication list ('models') not found in configuration.")
             logger.error(msg)
             raise ConfigurationException(msg)

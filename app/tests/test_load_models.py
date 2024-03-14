@@ -1,5 +1,5 @@
-from .base_test_case import BaseTestCase
 import pytest
+from .base_test_case import BaseTestCase
 
 
 class TestLoadModels(BaseTestCase):
@@ -9,13 +9,6 @@ class TestLoadModels(BaseTestCase):
         self.setup()
 
     def test_load_sigle_model_with_warnings(self):
-        # messages
-        # expected_msg = 'Model: es-ca ( sentence_split-nltk lowercase translate-opus-huggingface recase )'
-        # expected_warning = "Model path not specified for model en-fr. Can't load custom translation model or segmenters."
-        # assert len(self.config.messages) == 1
-        # assert self.config.messages[0] == expected_msg
-        # assert len(self.config.warnings) == 1
-        # assert self.config.warnings[0] == expected_warning
 
         # languages
         assert self.config.language_codes == {'es': 'Spanish', 'ca': 'Catalan'}

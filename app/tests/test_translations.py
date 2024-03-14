@@ -12,7 +12,6 @@ class TestTranslations(BaseTestCase):
         assert translation == expected_translation
 
 
-class TestTranslations(BaseTestCase):
     def test_translate_text_ca_es(self):
         model_id = get_model_id('ca', 'es')
         text = 'Hola, com estàs?'
