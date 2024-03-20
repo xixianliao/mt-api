@@ -216,6 +216,7 @@ python main.py
 ```
 It takes two arguments both optional.
 With the argument **--load** you can specify ids for models to be loaded. If this argument contains **all** it will load all the models.
+by default it will load **es-ca, ca-es**
 ```
 --load 'es-ca' ['ca-e' ....]
 --load 'all'
@@ -225,8 +226,6 @@ On the other hand, the argument **--models** is used to specify path of preexist
 ```
 --models ./path_to_models
 ```
-
-You can also run `run_local.sh` directly.
 
 ## Download models
 
