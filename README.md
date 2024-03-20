@@ -281,11 +281,47 @@ Do the following edits on docker-compose file
 2. Under environment, set `MT_API_DEVICE=gpu`
 3. Build and run.
 
+
+
+##  Rest API Endpoints
+
+### 1. Translate text
+
+| **Method** | **Endpoint** | **Description**                                       |
+|------------|--------------|-------------------------------------------------------|
+| POST       | `/api/v1/translate`   | Translate text.                              |
+
+**Request Parameters:**
+
+| **Parameter** | **Type**           | **Description**                                            |
+|---------------|--------------------|------------------------------------------------------------|
+| src           | string             | Source language code (e.g., "es")                          |
+| tgt           | string             | Target language code (e.g., "ca")                          |
+| text          | string             | Text to translate    (e.g., "Hola cómo estás")             |
+
+### 2. Translate batch of text
+
+| **Method** | **Endpoint** | **Description**                                       |
+|------------|--------------|-------------------------------------------------------|
+| POST       | `/api/v1/translate/batch`   | Translate batch of texts.              |
+
+
+**Request Parameters:**
+
+| **Parameter** | **Type**           | **Description**                                            |
+|---------------|--------------------|------------------------------------------------------------|
+| src           | string             | Source language code (e.g., "es")                          |
+| tgt           | string             | Target language code (e.g., "ca")                          |
+| texts         | string             | List of texts    (e.g., ["Hola", "Cómo estás"])            |
+
+### 2. Chcek api health
+
+| **Method** | **Endpoint** | **Description**                                       |
+|------------|--------------|-------------------------------------------------------|
+| POST       | `/health`    | Check the api health, if the api is working correctly.|
+
+
 ## Example calls
-
-### Simple translation
-
-Endpoint for translating a single phrase. 
 
 #### cURL
 
