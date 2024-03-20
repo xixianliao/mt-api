@@ -4,9 +4,9 @@ import uvicorn
 from app import create_app
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Ejemplo de uso de argparse para el argumento -m/--models")
-    parser.add_argument("-m", "--models", type=str, default="./models", help="Path de los modelos descargados manualmente", required=False)
-    parser.add_argument("-l", "--load", type=str, nargs="+", help="Opción para cargar modelos", default=["es-ca", "ca-es"])
+    parser = argparse.ArgumentParser(description="An API designed to provide translation services for text between different languages.")
+    parser.add_argument("-m", "--models", type=str, default="./models", help="Directory path of models", required=False)
+    parser.add_argument("-l", "--load", type=str, nargs="+", help="Option to load models, if it contains 'all' it will download all models", default=["es-ca", "ca-es"])
 
     args = parser.parse_args()
     os.environ['MODELS_ROOT'] = args.models
