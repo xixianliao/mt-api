@@ -251,15 +251,15 @@ git clone https://huggingface.co/projecte-aina/aina-translator-ca-es
 git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 ```
 
-# Docker 
+## Docker 
 
-## Run with docker
+### Run with docker
 
 ```
 docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest [--load es-ca ca-es ...]
 ```
 
-## Run offline mode with docker 
+### Run offline mode with docker 
 
 ```
 docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest  [--load es-ca ca-es ...]
