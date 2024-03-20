@@ -240,16 +240,19 @@ Install git lfs
 ```bash
 git lfs install
 ```
-Download model **ca-es** to translate from catalan to spanish
+
+Now you can download any model from this repository [MT-MODELS](https://huggingface.co/collections/projecte-aina/mt-models-655e154668c6dd132159081c).
+
+Next command lines examples of how to download these models.
+- Ex1: Download model **ca-es** to translate from catalan to spanish
 ```bash
 git clone https://huggingface.co/projecte-aina/aina-translator-ca-es
 ```
 
-Download models **es-ca** to translate from spanish to catalan
+- Ex2: Download models **es-ca** to translate from spanish to catalan
 ```bash
 git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 ```
-
 
 ## Build and run with docker-compose (recommended)
 
