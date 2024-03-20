@@ -254,7 +254,7 @@ git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 ## Build and run with docker-compose (recommended)
 
 ```
-docker-compose up
+make deploy
 ```
 
 ## Run with docker

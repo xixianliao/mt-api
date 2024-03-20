@@ -160,7 +160,7 @@ class Config(metaclass=Singleton):
                 continue
 
             try:
-                self._load_model(model_config, not os.getenv('HF_HUB_OFFLINE', False))
+                self._load_model(model_config, os.getenv("HF_HUB_OFFLINE", 'False').lower() not in ('true', '1', 't'))
             except ModelLoadingException:
                 continue
 
