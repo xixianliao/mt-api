@@ -36,7 +36,7 @@ def fetch_model_data_from_request(request):
 
     if not compatible_model_ids:
         raise HTTPException(
-                status_code=406,
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail=f'Language pair {model_id} is not supported.',
             )
 
@@ -73,18 +73,16 @@ def fetch_model_data_from_request(request):
 
 @translate_v1.post("", status_code=status.HTTP_200_OK)
 @translate_v1.post('/', status_code=status.HTTP_200_OK)
-async def translate_sentence(
+def translate_sentence(
     request: TranslationRequest,
 ) -> TranslationResponse:
-
     model_id, src, tgt = fetch_model_data_from_request(request)
 
     translation = translate_text(model_id, request.text, src, tgt)
-
     return TranslationResponse(translation=translation)
 
 @translate_v1.post('/batch', status_code=status.HTTP_200_OK)
-async def translate_batch(
+def translate_batch(
     request: BatchTranslationRequest,
 ) -> BatchTranslationResponse:
     config = Config()
@@ -102,7 +100,7 @@ async def translate_batch(
 
 @translate_v1.get('', status_code=status.HTTP_200_OK)
 @translate_v1.get('/', status_code=status.HTTP_200_OK)
-async def languages() -> LanguagesResponse:
+def languages() -> LanguagesResponse:
     config = Config()
 
     return LanguagesResponse(

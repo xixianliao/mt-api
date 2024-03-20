@@ -6,8 +6,7 @@ from app.constants import HELSINKI_NLP
 from app.settings import (
     CTRANSLATE_DEVICE,
     CTRANSLATE_INTER_THREADS,
-    TRANSFORMERS_DEVICE,
-    MODELS_ROOT_DIR,
+    TRANSFORMERS_DEVICE
 )
 
 def dummy_translator(content: str) -> str:
@@ -57,7 +56,8 @@ def get_batch_ctranslator(ctranslator_model_path: str) -> Callable:
     # ]
 
     def translator(src_texts, src=None, tgt=None):
-        return [s[0]['tokens'] for s in ctranslator.translate_batch(src_texts)]
+        translations = ctranslator.translate_batch(src_texts)
+        return [s[0]['tokens'] for s in translations]
 
     return translator
 
@@ -68,7 +68,7 @@ def get_batch_opustranslator(
     from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 
     model_name = f'opus-mt-{src}-{tgt}'
-    local_model = os.path.join(MODELS_ROOT_DIR, model_name)
+    local_model = os.path.join(os.getenv('MODELS_ROOT'), model_name)
     remote_model = f'{HELSINKI_NLP}/{model_name}'
     is_model_loaded, is_tokenizer_loaded = False, False
 
@@ -105,7 +105,7 @@ def get_batch_opusbigtranslator(
     from transformers import MarianMTModel, MarianTokenizer, pipeline
 
     model_name = f'opus-mt-tc-big-{src}-{tgt}'
-    local_model = os.path.join(MODELS_ROOT_DIR, model_name)
+    local_model = os.path.join(os.getenv('MODELS_ROOT'), model_name)
     remote_model = f'{HELSINKI_NLP}/{model_name}'
     is_model_loaded, is_tokenizer_loaded = False, False
 
@@ -143,7 +143,7 @@ def get_batch_nllbtranslator(nllb_checkpoint_id:str, lang_map:dict=None) -> Opti
 
     from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 
-    local_model = os.path.join(MODELS_ROOT_DIR, nllb_checkpoint_id)
+    local_model = os.path.join(os.getenv('MODELS_ROOT'), nllb_checkpoint_id)
     remote_model = nllb_checkpoint_id
 
     is_model_loaded, is_tokenizer_loaded = False, False
@@ -197,7 +197,7 @@ def get_batch_m2m100translator(m2m100_checkpoint_id:str, lang_map:dict=None) -> 
 
     from transformers import M2M100Tokenizer, M2M100ForConditionalGeneration, pipeline
 
-    local_model = os.path.join(MODELS_ROOT_DIR, m2m100_checkpoint_id)
+    local_model = os.path.join(os.getenv('MODELS_ROOT'), m2m100_checkpoint_id)
     remote_model = m2m100_checkpoint_id
 
     is_model_loaded, is_tokenizer_loaded = False, False

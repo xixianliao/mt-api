@@ -1,31 +1,53 @@
+import pytest
+import json
 from .base_test_case import BaseTestCase
+from app.settings import (CONFIG_JSON_PATH)
+from app.helpers.config import Config
 
 
-class TestLoadModels(BaseTestCase):
-    def test_load_sigle_model_with_warnings(self):
-        # messages
-        expected_msg = 'Model: en-fr ( sentence_split-nltk lowercase translate-opus-huggingface recase )'
-        assert len(self.config.messages) == 1
-        assert self.config.messages[0] == expected_msg
-        expected_warning = "Model path not specified for model en-fr. Can't load custom translation model or segmenters."
-        assert len(self.config.warnings) == 1
-        assert self.config.warnings[0] == expected_warning
+class TestLoadModels():
 
+    def test_load_models_with_warnings(self):
+        
+        self.config_data = {
+            "languages": {
+                "es": "Spanish",
+                "ca": "Catalan"
+            },
+            "models": [
+                {
+                "src": "ca",
+                "tgt": "es",
+                "model_type": "ctranslator2",
+                "hugging_face_repo_id": "projecte-aina/mt-aina-ca-es",
+                "model_path": "mt-aina-ca-es",
+                "src_sentencepiece_model": "spm.model",
+                "tgt_sentencepiece_model": "spm.model",
+                "sentence_split": "nltk",
+                "pipeline": {
+                    "sentencepiece": True,
+                    "translate": True
+                }
+            }]
+        }
+
+        self.config = Config(config_data=self.config_data, load_all_models=True)
         # languages
-        assert self.config.language_codes == {'en': 'English', 'fr': 'French'}
-        assert self.config.languages_list == {'en': {'fr': ['en-fr']}}
+        assert self.config.language_codes == {'es': 'Spanish', 'ca': 'Catalan'}
+        assert self.config.languages_list == {'ca': {'es': ['ca-es']}}
 
-        # model
+        # models
         assert len(self.config.loaded_models) == 1
-        assert 'en-fr' in self.config.loaded_models
-        model = self.config.loaded_models['en-fr']
-        assert model['src'] == 'en'
-        assert model['tgt'] == 'fr'
+
+        assert 'ca-es' in self.config.loaded_models
+        model = self.config.loaded_models['ca-es']
+        assert model['src'] == 'ca'
+        assert model['tgt'] == 'es'
 
         # pipeline
         assert model['sentence_segmenter'].__name__ == 'nltk_sentence_segmenter'
         assert len(model['preprocessors']) == 1
-        assert model['preprocessors'][0].__name__ == 'lowercaser'
         assert len(model['postprocessors']) == 1
-        assert model['postprocessors'][0].__name__ == 'capitalizer'
-        assert 'get_batch_opustranslator' in str(model['translator'])
+        assert 'get_sentencepiece_segmenter' in str(model['preprocessors'])
+        assert 'get_sentencepiece_desegmenter' in str(model['postprocessors'])
+        assert 'get_batch_ctranslator' in str(model['translator'])

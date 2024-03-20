@@ -26,7 +26,6 @@ class TranslationResponse(BaseModel):
 class BatchTranslationResponse(BaseModel):
     translation: List[str]
 
-
 class LanguagesResponse(BaseModel):
     models: Dict
     languages: Dict

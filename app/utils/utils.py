@@ -10,21 +10,15 @@ def capitalizer(word: str) -> str:
     return word.capitalize()
 
 def get_model_id(src: str, tgt: str, alt_id: Optional[str] = None) -> str:
-    model_id = src + MODEL_TAG_SEPARATOR + tgt
-    if alt_id:
-        model_id += MODEL_TAG_SEPARATOR + alt_id
-    return model_id
+    items = [src, tgt, alt_id] if alt_id else [src, tgt] 
+    return MODEL_TAG_SEPARATOR.join(items)
 
 def parse_model_id(model_id: str) -> Optional[Tuple[str, str, str]]:
     fields = model_id.split(MODEL_TAG_SEPARATOR)
-    if len(fields) == 2:
-        alt = ''
-    elif len(fields) == 3:
-        alt = fields[2]
-    else:
+    if len(fields) not in [2, 3]:
         return None
 
     src = fields[0]
     tgt = fields[1]
-
+    alt = fields[2] if len(fields) == 3 else ''
     return src, tgt, alt

@@ -21,24 +21,32 @@ API configuration file (`config.json`) is where we specify the models to load an
 ```
 {
   "languages": {
-    "en": "English",
-    "fr": "French",
-    "tr": "Turkish"
+    "es": "Spanish",
+    "ca": "Catalan",
+    "en": "English"
   },
   "models": [
     {
-        "src": "en",
-        "tgt": "tr",
-        "model_type": "opus-big",
-        "load": true,
-        "sentence_split": "nltk", 
-        "pipeline": {
-            "translate": true
-        }
-    }
+      "src": "ca",
+      "tgt": "es",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "id...." // repo id to download the model (optional)",
+      "model_path": "model...", //model directory name under models
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "load": true,
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    ...
   ]
 }
 ```
+
+<!--
 
 ### Custom ctranslate2 model configuration
 
@@ -55,6 +63,7 @@ Add the following configuration under `models` in `config.json`:
     "src": "en",
     "tgt": "tr",
     "model_type": "ctranslator2",
+    "hugging_face_repo_id": "id...." // repo id to download the model (optional)",
     "model_path": "entr",  //model directory name under models
     "bpe_file": "bpe.en-tr.codes",
     "load": true,
@@ -183,44 +192,145 @@ By default, one model can be loaded to serve a language direction. Although, if 
 ```
 
 To use the big model while inference request, you'll need to specify an `alt` parameter as `big`. Otherwise, it'll default to the first loaded model. (Example shown later below)
+-->
 
 
-
-## Build and run
+### Setup development environment
 
 Set the environment variables:
 ```
 MT_API_CONFIG=config.json
-MODELS_ROOT=../translation-models
+MODELS_ROOT=./models
 MT_API_DEVICE=cpu #or "gpu"
+```
+
+Create an environment
+```
+python -m venv venv
+source venv/bin/activate
 ```
 
 ```
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001
+python main.py [--load es-ca ca-es ...] [--models ./models]
+```
+It takes two arguments both optional.
+With the argument **--load** you can specify ids for models to be loaded. If this argument contains **all** it will load all the models.
+by default it will load **es-ca** and **ca-es**
+```
+python main.py --load all
 ```
 
-You can also run `run_local.sh` directly. 
-
-## Build and run with docker-compose (recommended)
-
+On the other hand, the argument **--models** is used to specify path of preexisting model, it will prevent downloading and use these preexisting models.
 ```
-docker-compose build
-docker-compose up
+python main.py --models ./path_to_models
 ```
 
-### To use GPU on docker
+## Download models
+
+create directory for models if not exists
+```bash
+mkdir models && cd models
+```
+
+Install git lfs
+```bash
+git lfs install
+```
+
+Now you can download any model from this repository [MT-MODELS](https://huggingface.co/collections/projecte-aina/mt-models-655e154668c6dd132159081c).
+
+Next command lines examples of how to download these models.
+- Ex1: Download model **ca-es** to translate from catalan to spanish
+```bash
+git clone https://huggingface.co/projecte-aina/aina-translator-ca-es
+```
+
+- Ex2: Download models **es-ca** to translate from spanish to catalan
+```bash
+git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
+```
+
+## Docker 
+
+### Docker launch from the hub
+
+
+To launch using lastest version available on the Dockerhub:
+
+
+```
+docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest
+
+```
+
+[Check out the documentation available on the Dockerhub](https://hub.docker.com/r/projecteaina/mt-api)
+
+
+### Run offline mode with docker 
+
+```
+docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest  [--load es-ca ca-es ...]
+```
+**--load** argument is used to prevent downloading all the models, by default it will load only **ca-es** **es-ca**. If you need to load all the models you can add:
+```
+--load all
+```
+
+### Deploy with docker-compose
+
+```
+make deploy
+```
+
+#### To use GPU on docker-compose
 
 Do the following edits on docker-compose file
 1. Remove comment on `runtime: nvidia` line
 2. Under environment, set `MT_API_DEVICE=gpu`
 3. Build and run.
 
+
+
+##  Rest API Endpoints
+
+### 1. Translate text
+
+| **Method** | **Endpoint** | **Description**                                       |
+|------------|--------------|-------------------------------------------------------|
+| POST       | `/api/v1/translate`   | Translate text.                              |
+
+**Request Parameters:**
+
+| **Parameter** | **Type**           | **Description**                                            |
+|---------------|--------------------|------------------------------------------------------------|
+| src           | string             | Source language code (e.g., "es")                          |
+| tgt           | string             | Target language code (e.g., "ca")                          |
+| text          | string             | Text to translate    (e.g., "Hola cómo estás")             |
+
+### 2. Translate batch of text
+
+| **Method** | **Endpoint** | **Description**                                       |
+|------------|--------------|-------------------------------------------------------|
+| POST       | `/api/v1/translate/batch`   | Translate batch of texts.              |
+
+
+**Request Parameters:**
+
+| **Parameter** | **Type**           | **Description**                                            |
+|---------------|--------------------|------------------------------------------------------------|
+| src           | string             | Source language code (e.g., "es")                          |
+| tgt           | string             | Target language code (e.g., "ca")                          |
+| texts         | string             | List of texts    (e.g., ["Hola", "Cómo estás"])            |
+
+### 2. Check api health
+
+| **Method** | **Endpoint** | **Description**                                       |
+|------------|--------------|-------------------------------------------------------|
+| POST       | `/health`    | Check the api health, if the api is working correctly.|
+
+
 ## Example calls
-
-### Simple translation
-
-Endpoint for translating a single phrase. 
 
 #### cURL
 
@@ -334,6 +444,11 @@ Note: The third level model list is for seeing different versions of the model. 
 
 For example in the setup above, there are two alternative models in the Arabic-English direction: A default model `ar_en` and a domain specific `ar_en_domainspecific` model where domainspecific is the alternative model id. For the rest of the language pairs there is only one default model. 
 
+## Api Testing
+To test the api just run the next command in terminal
+```bash
+sh run_test.sh
+```
 
 ## Authors and acknowledgment
 Developed by the Language Technologies Unit in Barcelona Supercomputing Center. The code is based on [TWB-MT-fastapi](https://github.com/translatorswb/TWB-MT-fastapi) which has a GNU General Public License.

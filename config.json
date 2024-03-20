@@ -1,17 +1,22 @@
 {
   "languages": {
     "es": "Spanish",
-    "ca": "Catalan"
+    "ca": "Catalan",
+    "en": "English",
+    "fr": "French",
+    "de": "German",
+    "it": "Italian",
+    "pt": "Portuguese"
   },
   "models": [
     {
       "src": "ca",
       "tgt": "es",
       "model_type": "ctranslator2",
-      "model_path": "mt-aina-ca-es",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-ca-es",
+      "model_path": "aina-translator-ca-es",
       "src_sentencepiece_model": "spm.model",
       "tgt_sentencepiece_model": "spm.model",
-      "load": true,
       "sentence_split": "nltk",
       "pipeline": {
         "sentencepiece": true,
@@ -22,15 +27,156 @@
       "src": "es",
       "tgt": "ca",
       "model_type": "ctranslator2",
-      "model_path": "mt-plantl-es-ca",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-es-ca",
+      "model_path": "aina-translator-es-ca",
       "src_sentencepiece_model": "spm.model",
       "tgt_sentencepiece_model": "spm.model",
-      "load": true,
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "ca",
+      "tgt": "en",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-ca-en",
+      "model_path": "aina-translator-ca-en",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "en",
+      "tgt": "ca",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-en-ca",
+      "model_path": "aina-translator-en-ca",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "ca",
+      "tgt": "fr",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-ca-fr",
+      "model_path": "aina-translator-ca-fr",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "fr",
+      "tgt": "ca",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-fr-ca",
+      "model_path": "aina-translator-fr-ca",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "ca",
+      "tgt": "de",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-ca-de",
+      "model_path": "aina-translator-ca-de",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "de",
+      "tgt": "ca",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-de-ca",
+      "model_path": "aina-translator-de-ca",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "ca",
+      "tgt": "it",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-ca-it",
+      "model_path": "aina-translator-ca-it",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "it",
+      "tgt": "ca",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-it-ca",
+      "model_path": "aina-translator-it-ca",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "ca",
+      "tgt": "pt",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-ca-pt",
+      "model_path": "aina-translator-ca-pt",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
+      "sentence_split": "nltk",
+      "pipeline": {
+        "sentencepiece": true,
+        "translate": true
+      }
+    },
+    {
+      "src": "pt",
+      "tgt": "ca",
+      "model_type": "ctranslator2",
+      "hugging_face_repo_id": "projecte-aina/aina-translator-pt-ca",
+      "model_path": "aina-translator-pt-ca",
+      "src_sentencepiece_model": "spm.model",
+      "tgt_sentencepiece_model": "spm.model",
       "sentence_split": "nltk",
       "pipeline": {
         "sentencepiece": true,
         "translate": true
       }
     }
+    
   ]
 }
