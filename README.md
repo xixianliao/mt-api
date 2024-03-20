@@ -226,7 +226,7 @@ On the other hand, the argument **--models** is used to specify path of preexist
 python main.py --models ./path_to_models
 ```
 
-## Download models
+### Download models (required for load models from local path)
 
 create directory for models if not exists
 ```bash
