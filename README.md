@@ -242,12 +242,12 @@ git lfs install
 ```
 Download model **ca-es** to translate from catalan to spanish
 ```bash
-git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
+git clone https://huggingface.co/projecte-aina/aina-translator-ca-es
 ```
 
 Download models **es-ca** to translate from spanish to catalan
 ```bash
-git clone https://huggingface.co/PlanTL-GOB-ES/mt-plantl-es-ca
+git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 ```
 
 
@@ -266,8 +266,6 @@ docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest
 ## Run offline mode with docker 
 
 ```
-#Clone the models from the Huggingface
-
 
 docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest 
 ```
