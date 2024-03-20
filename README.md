@@ -195,7 +195,7 @@ To use the big model while inference request, you'll need to specify an `alt` pa
 -->
 
 
-## Build and run
+### Setup development environment
 
 Set the environment variables:
 ```
@@ -204,7 +204,7 @@ MODELS_ROOT=./models
 MT_API_DEVICE=cpu #or "gpu"
 ```
 
-Create an environment if you want (optional)
+Create an environment
 ```
 python -m venv venv
 source venv/bin/activate
@@ -251,11 +251,7 @@ git clone https://huggingface.co/projecte-aina/aina-translator-ca-es
 git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 ```
 
-## Build and run with docker-compose (recommended)
-
-```
-make deploy
-```
+# Docker 
 
 ## Run with docker
 
@@ -266,7 +262,6 @@ docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest [--lo
 ## Run offline mode with docker 
 
 ```
-
 docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest  [--load es-ca ca-es ...]
 ```
 **--load** argument is used to prevent downloading all the models, by default it will load only **ca-es** **es-ca**. If you need to load all the models you can add:
@@ -274,8 +269,13 @@ docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecte
 --load all
 ```
 
+### Deploy with docker-compose
 
-### To use GPU on docker
+```
+make deploy
+```
+
+#### To use GPU on docker-compose
 
 Do the following edits on docker-compose file
 1. Remove comment on `runtime: nvidia` line
@@ -315,7 +315,7 @@ Do the following edits on docker-compose file
 | tgt           | string             | Target language code (e.g., "ca")                          |
 | texts         | string             | List of texts    (e.g., ["Hola", "Cómo estás"])            |
 
-### 2. Chcek api health
+### 2. Check api health
 
 | **Method** | **Endpoint** | **Description**                                       |
 |------------|--------------|-------------------------------------------------------|
