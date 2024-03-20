@@ -31,4 +31,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: projecteaina/mt-api:latest, projecteaina/tts-api:${{ github.sha }}
+          tags: projecteaina/mt-api:latest, projecteaina/mt-api:${{ github.sha }}
