@@ -212,14 +212,14 @@ source venv/bin/activate
 
 ```
 pip install -r requirements.txt
-python main.py
+python main.py [--load es-ca ca-es ...] [--models ./models]
 ```
 It takes two arguments both optional.
 With the argument **--load** you can specify ids for models to be loaded. If this argument contains **all** it will load all the models.
-by default it will load **es-ca, ca-es**
+by default it will load **es-ca** and **ca-es**
 ```
---load 'es-ca' ['ca-e' ....]
---load 'all'
+--load es-ca ca-e ....
+--load all
 ```
 
 On the other hand, the argument **--models** is used to specify path of preexisting model, it will prevent downloading and use these preexisting models.
@@ -259,17 +259,22 @@ git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 make deploy
 ```
 
+
 ## Run with docker
 
 ```
-docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest
+docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest [--load es-ca ca-es ...]
 ```
 
 ## Run offline mode with docker 
 
 ```
 
-docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest 
+docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest  [--load es-ca ca-es ...]
+```
+**--load** argument is used to prevent downloading all the models, by default it will load only **ca-es** **es-ca**. If you need to load all the models you can add:
+```
+--load all
 ```
 
 
