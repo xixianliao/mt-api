@@ -226,15 +226,27 @@ On the other hand, the argument **--models** is used to specify path of preexist
 --models ./path_to_models
 ```
 
-
-You can also run `run_local.sh` directly. 
-
-## Build and run with docker-compose (recommended)
+## Run with docker-compose
 
 ```
-docker-compose build
 docker-compose up
 ```
+
+## Run with docker
+
+```
+docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest
+```
+
+## Run offline mode with docker 
+
+```
+#Clone the models from the Huggingface
+
+
+docker run -p 8000:8000 -e HF_HUB_OFFLINE=True  -v ./models:/app/models projecteaina/mt-api:latest 
+```
+
 
 ### To use GPU on docker
 

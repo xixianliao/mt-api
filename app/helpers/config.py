@@ -25,7 +25,6 @@ class Config(metaclass=Singleton):
         config_file: Optional[str] = None,
         config_data: Optional[Dict] = None,
         load_all_models: bool = False,
-        download_models:bool = True,
         models_to_load:list = []
     ):
         self.loaded_models: Dict = {}
@@ -35,7 +34,6 @@ class Config(metaclass=Singleton):
         self.config_data: Dict = config_data or {}
         self.config_file: str = config_file or CONFIG_JSON_PATH
         self.load_all_models: bool = load_all_models
-        self.download_models = download_models
         
         self.warnings: List[str] = []
         self.messages: List[str] = []
@@ -162,7 +160,7 @@ class Config(metaclass=Singleton):
                 continue
 
             try:
-                self._load_model(model_config, self.download_models)
+                self._load_model(model_config, not os.getenv('HF_HUB_OFFLINE', False))
             except ModelLoadingException:
                 continue
 
@@ -338,10 +336,10 @@ class Config(metaclass=Singleton):
             raise ConfigurationException(msg)
         
         model_dir = os.getenv('MODELS_ROOT')
-        if not self.download_models and  not os.path.exists(model_dir):
-            msg = f'`{model_dir}` directory not found. No models will be loaded.'
-            logger.error(msg)
-            raise ConfigurationException(msg)
+        # if not os.path.exists(model_dir):
+        #     msg = f'`{model_dir}` directory not found. No models will be loaded.'
+        #     logger.error(msg)
+        #     raise ConfigurationException(msg)
 
     def _validate_src_tgt(self, src: str, tgt: str) -> None:
         if not src in self.language_codes:
