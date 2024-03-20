@@ -8,8 +8,7 @@ from app.constants import SUPPORTED_MODEL_TYPES, MULTIMODALCODE, MODEL_TAG_SEPAR
 from app.exceptions import ConfigurationException, ModelLoadingException
 from app.helpers.singleton import Singleton
 from app.settings import (
-    CONFIG_JSON_PATH,
-    MODELS_ROOT_DIR,
+    CONFIG_JSON_PATH
 )
 from app.utils.pipeline import pipeline
 from app.utils.utils import (
@@ -36,7 +35,8 @@ class Config(metaclass=Singleton):
         self.config_data: Dict = config_data or {}
         self.config_file: str = config_file or CONFIG_JSON_PATH
         self.load_all_models: bool = load_all_models
-
+        self.download_models = download_models
+        
         self.warnings: List[str] = []
         self.messages: List[str] = []
 
@@ -45,7 +45,7 @@ class Config(metaclass=Singleton):
             self._validate_models()
 
         self._load_language_codes()
-        self._load_models(download_models, load_all_models, models_to_load)
+        self._load_models(load_all_models, models_to_load)
         self._load_languages_list()
 
     def map_lang_to_closest(self, lang: str) -> str:
@@ -57,10 +57,9 @@ class Config(metaclass=Singleton):
 
     def _get_model_path(self, model_config: Dict, model_id: str) -> Optional[str]:
         model_dir = None
-
         # Check model path
         if 'model_path' in model_config and model_config['model_path'] and not model_config['model_type'] == 'custom':
-            model_dir = os.path.join(MODELS_ROOT_DIR, model_config['model_path'])
+            model_dir = os.path.join(os.getenv('MODELS_ROOT'), model_config['model_path'])
 
         else:
             self._log_warning(
@@ -148,7 +147,7 @@ class Config(metaclass=Singleton):
             return False
         return True
 
-    def _load_models(self, download_models, load_all, models_to_load) -> None:
+    def _load_models(self, load_all, models_to_load) -> None:
         for model_config in self.config_data['models']:
             _, _, model_id = self._get_ser_tgt_model_id(model_config)
 
@@ -163,7 +162,7 @@ class Config(metaclass=Singleton):
                 continue
 
             try:
-                self._load_model(model_config, download_models)
+                self._load_model(model_config, self.download_models)
             except ModelLoadingException:
                 continue
 
@@ -332,17 +331,17 @@ class Config(metaclass=Singleton):
                 raise ConfigurationException(msg) from exc
 
     def _validate_models(self) -> None:
-        # Check if MODELS_ROOT_DIR exists
+        # Check if models exists in config
         if 'models' not in self.config_data:
             msg = ("Model spefication list ('models') not found in configuration.")
             logger.error(msg)
             raise ConfigurationException(msg)
         
-
-
-        # if not os.path.exists(MODELS_ROOT_DIR):
-        #     logger.error('`models` directory not found. No models will be loaded.')
-        #     # raise ConfigurationException(msg)
+        model_dir = os.getenv('MODELS_ROOT')
+        if not self.download_models and  not os.path.exists(model_dir):
+            msg = f'`{model_dir}` directory not found. No models will be loaded.'
+            logger.error(msg)
+            raise ConfigurationException(msg)
 
     def _validate_src_tgt(self, src: str, tgt: str) -> None:
         if not src in self.language_codes:

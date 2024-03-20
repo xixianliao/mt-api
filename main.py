@@ -20,6 +20,7 @@ if __name__ == "__main__":
         download_models = False
         os.environ['MODELS_ROOT'] = models
     else:
+        os.environ['MODELS_ROOT'] = './models'
         download_models = True
 
     app = create_app(download_models, load_all_models, models_to_load)
