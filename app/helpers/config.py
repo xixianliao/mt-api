@@ -173,7 +173,7 @@ class Config(metaclass=Singleton):
     def _download_models(self, model_id, repo_id, model_path):
         if repo_id:
             self._log_info(f'Downloading model "{model_id}"')
-            snapshot_download(repo_id=repo_id, revision="main", local_dir=model_path, cache_dir='.cache')
+            snapshot_download(repo_id=repo_id, revision="main", local_dir=model_path, cache_dir=model_path)
         else:
             msg = f'Unable to download model {model_id}, missing: hugging_face_repo_id'
             logger.error(msg)

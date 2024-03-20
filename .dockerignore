@@ -4,6 +4,10 @@ venv
 Dockerfile
 Makefile
 **/.git
+**/.cache
 **/__pycache__
 **/gitattributes
+./models
 run_local.sh
+run_test.sh
+README.md

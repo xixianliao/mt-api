@@ -23,7 +23,7 @@ if __name__ == "__main__":
         download_models = True
 
     app = create_app(download_models, load_all_models, models_to_load)
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_config = "logging.yml")
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_config = "logging.yml")
 
 else:
     app = create_app(download_models=False, models_to_load=["es-ca", "ca-es"])

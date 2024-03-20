@@ -1,43 +1,38 @@
-FROM python:3.9-slim
+# syntax=docker/dockerfile:1
 
-RUN apt-get update -y && apt-get install git -y && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}
-RUN groupadd -r myuser && useradd -r -g myuser myuser 
+ARG PYTHON_VERSION=3.10.12
+FROM python:${PYTHON_VERSION}-slim as base
 
-RUN mkdir /app
-RUN mkdir /home/myuser
-RUN chown -R myuser:myuser /app /home/myuser
+# Prevents Python from writing pyc files.
+ENV PYTHONDONTWRITEBYTECODE=1
 
+# Keeps Python from buffering stdout and stderr to avoid situations where
+# the application crashes without emitting any logs due to buffering.
+ENV PYTHONUNBUFFERED=1
 
-USER myuser
-
-ENV VIRTUAL_ENV=/home/myuser/venv
-
-RUN python -m venv "$VIRTUAL_ENV"
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 ENV MT_API_CONFIG /app/config.json
 ENV MODELS_ROOT /app/models
 
+ENV HUGGINGFACE_HUB_CACHE=/data \
+    HF_HUB_ENABLE_HF_TRANSFER=1 \
+    PORT=80
+    
 WORKDIR /app
 
-RUN pip install  --quiet --upgrade pip && \
-    pip install  --quiet pip-tools
-
-COPY ./models /app/models
+RUN pip install hf_transfer
 
 COPY ./requirements.txt /app/requirements.txt
-RUN pip install -r /app/requirements.txt --no-cache-dir
+RUN  python -m pip install -r requirements.txt --no-cache
 
-#Custom translator requirements
-#COPY ./app/customtranslators/<customtranslatorname>/requirements.txt /app/customrequirements.txt
-#RUN pip install -r /app/customrequirements.txt \
-#    && rm -rf /root/.cache/pip
-
-COPY . /app
 COPY ./app/nltk_pkg.py /app/nltk_pkg.py
 RUN python /app/nltk_pkg.py
 
+# Copy the source code into the container.
+COPY . .
+
+# Expose the port that the application listens on.
 EXPOSE 8000
 
-CMD python main.py --models './models'
-# -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-config logging.yml
+# Run the application.
+ENTRYPOINT [ "python", "main.py" ]
