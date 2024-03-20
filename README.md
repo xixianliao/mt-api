@@ -253,11 +253,19 @@ git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 
 ## Docker 
 
-### Run with docker
+### Docker launch from the hub
+
+
+To launch using lastest version available on the Dockerhub:
+
 
 ```
-docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest [--load es-ca ca-es ...]
+docker run -p 8000:8000 -v ./models:/app/models projecteaina/mt-api:latest
+
 ```
+
+[Check out the documentation available on the Dockerhub](https://hub.docker.com/r/projecteaina/mt-api)
+
 
 ### Run offline mode with docker 
 
