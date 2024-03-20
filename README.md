@@ -226,8 +226,30 @@ On the other hand, the argument **--models** is used to specify path of preexist
 --models ./path_to_models
 ```
 
+You can also run `run_local.sh` directly.
 
-You can also run `run_local.sh` directly. 
+## Download models
+
+create directory for models if not exists
+```bash
+mkdir models
+cd models
+```
+
+Install git lfs
+```bash
+git lfs install
+```
+Download model **ca-es** to translate from catalan to spanish
+```bash
+git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
+```
+
+Download models **es-ca** to translate from spanish to catalan
+```bash
+git clone https://huggingface.co/PlanTL-GOB-ES/mt-plantl-es-ca
+```
+
 
 ## Build and run with docker-compose (recommended)
 
