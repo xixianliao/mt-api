@@ -218,21 +218,19 @@ It takes two arguments both optional.
 With the argument **--load** you can specify ids for models to be loaded. If this argument contains **all** it will load all the models.
 by default it will load **es-ca** and **ca-es**
 ```
---load es-ca ca-e ....
---load all
+python main.py --load all
 ```
 
 On the other hand, the argument **--models** is used to specify path of preexisting model, it will prevent downloading and use these preexisting models.
 ```
---models ./path_to_models
+python main.py --models ./path_to_models
 ```
 
 ## Download models
 
 create directory for models if not exists
 ```bash
-mkdir models
-cd models
+mkdir models && cd models
 ```
 
 Install git lfs
@@ -258,7 +256,6 @@ git clone https://huggingface.co/projecte-aina/aina-translator-es-ca
 ```
 make deploy
 ```
-
 
 ## Run with docker
 
