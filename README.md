@@ -34,7 +34,6 @@ API configuration file (`config.json`) is where we specify the models to load an
       "model_path": "model...", //model directory name under models
       "src_sentencepiece_model": "spm.model",
       "tgt_sentencepiece_model": "spm.model",
-      "load": true,
       "sentence_split": "nltk",
       "pipeline": {
         "sentencepiece": true,
