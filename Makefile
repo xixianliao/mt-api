@@ -6,3 +6,9 @@ undeploy:
 	docker compose down
 stop:
 	docker compose stop
+
+
+	
+
+act-run-tests:
+	gh act -j run-tests -W '.github/workflows/tests.yml'

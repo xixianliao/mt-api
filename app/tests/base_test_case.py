@@ -1,9 +1,13 @@
 from fastapi.testclient import TestClient
-from main import app
+from app import create_app
+import os
 
 class BaseTestCase:
+
     def setup(self):
-        self.client = TestClient(app)
+        os.environ['MODELS_ROOT'] = "./models"
+        self.app = create_app(models_to_load=["es-ca", "ca-es"])
+        self.client = TestClient(self.app)
 
 
 class APIBaseTestCase(BaseTestCase):

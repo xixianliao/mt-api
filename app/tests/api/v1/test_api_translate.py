@@ -2,7 +2,6 @@ import json
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
-from main import app
 
 from app.tests.base_test_case import APIBaseTestCase
 
@@ -14,15 +13,23 @@ class TestTranslateApiV1(APIBaseTestCase):
         self.setup()
 
     def test_list_languages(self):
-        with TestClient(app) as client:
+        with TestClient(self.app) as client:
             response = client.get(url=self.get_endpoint('/'))
             assert response.status_code == status.HTTP_200_OK
             content = response.json()
             assert content['models'] == {'ca': {'es': ['ca-es']}, 'es': {'ca': ['es-ca']}}
-            assert content['languages'] == {'es': 'Spanish', 'ca': 'Catalan'}
+            assert content['languages'] == {
+                "es": "Spanish",
+                "ca": "Catalan",
+                "en": "English",
+                "fr": "French",
+                "de": "German",
+                "it": "Italian",
+                "pt": "Portuguese"
+         }
 
     def test_translate_text_valid_code(self):
-        with TestClient(app) as client:
+        with TestClient(self.app) as client:
             options = {
                 'src': 'es',
                 'tgt': 'ca',

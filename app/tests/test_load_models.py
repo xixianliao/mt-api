@@ -12,15 +12,20 @@ class TestLoadModels():
         self.config_data = {
             "languages": {
                 "es": "Spanish",
-                "ca": "Catalan"
+                "ca": "Catalan",
+                "en": "English",
+                "fr": "French",
+                "de": "German",
+                "it": "Italian",
+                "pt": "Portuguese"
             },
             "models": [
                 {
                 "src": "ca",
                 "tgt": "es",
                 "model_type": "ctranslator2",
-                "hugging_face_repo_id": "projecte-aina/mt-aina-ca-es",
-                "model_path": "mt-aina-ca-es",
+                "hugging_face_repo_id": "projecte-aina/aina-translator-ca-es",
+                "model_path": "aina-translator-ca-es",
                 "src_sentencepiece_model": "spm.model",
                 "tgt_sentencepiece_model": "spm.model",
                 "sentence_split": "nltk",
@@ -33,7 +38,16 @@ class TestLoadModels():
 
         self.config = Config(config_data=self.config_data, load_all_models=True)
         # languages
-        assert self.config.language_codes == {'es': 'Spanish', 'ca': 'Catalan'}
+        assert self.config.language_codes == {
+                "es": "Spanish",
+                "ca": "Catalan",
+                "en": "English",
+                "fr": "French",
+                "de": "German",
+                "it": "Italian",
+                "pt": "Portuguese"
+         }
+    
         assert self.config.languages_list == {'ca': {'es': ['ca-es']}}
 
         # models
