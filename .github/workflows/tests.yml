@@ -1,8 +1,11 @@
-name:Python Unit Tests
+name: Python Unit Tests
 
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+    - main
 
 jobs:
   run-tests:
