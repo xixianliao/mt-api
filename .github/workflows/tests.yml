@@ -36,7 +36,11 @@ jobs:
       - run: python app/nltk_pkg.py
 
       - name: Run tests
-        run: pytest
+        run: | 
+          export HUGGINGFACE_HUB_CACHE=/app/models
+          export HF_HUB_ENABLE_HF_TRANSFER=1
+          export PORT=80
+          pytest
 
 
       
