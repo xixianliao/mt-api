@@ -1,10 +1,10 @@
 fastapi==0.110.0
-uvicorn==0.27.0.post1
+uvicorn==0.29.0
 subword_nmt==0.3.8
-ctranslate2==3.24.0
+ctranslate2==4.3.0
 sacremoses==0.1.1
 nltk==3.8.1
-sentencepiece==0.1.99
-torch==2.2.0
-transformers==4.37.2
+sentencepiece==0.2.0
+torch==2.3.0
+transformers==4.41.0
 httpx==0.27.0
