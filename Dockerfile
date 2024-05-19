@@ -25,8 +25,7 @@ RUN pip install hf_transfer
 COPY ./requirements.txt /app/requirements.txt
 RUN  python -m pip install -r requirements.txt --no-cache
 
-COPY ./app/nltk_pkg.py /app/nltk_pkg.py
-RUN python /app/nltk_pkg.py
+RUN python -m nltk.downloader punkt
 
 # Copy the source code into the container.
 COPY . .

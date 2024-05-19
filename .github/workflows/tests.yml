@@ -33,7 +33,7 @@ jobs:
           pip install pytest hf_transfer 
           pip install -r requirements.txt
       
-      - run: python app/nltk_pkg.py
+      - run: python -m nltk.downloader punkt
 
       - name: Run tests
         run: | 
