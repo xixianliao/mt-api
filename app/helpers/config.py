@@ -150,13 +150,18 @@ class Config(metaclass=Singleton):
             _, _, model_id = self._get_ser_tgt_model_id(model_config)
 
             if not load_all and model_id not in models_to_load:
+                logging.info('Model ID not in list')
+                logging.info(models_to_load)
+                logging.info(model_id)
                 continue
 
             # CONFIG CHECKS
             if not self._is_valid_model_config(model_config):
+                logging.info('Error validating config file')
                 continue
 
             if not self._is_valid_model_type(model_config['model_type']):
+                logging.info('Error validating model type')
                 continue
 
             try:
@@ -170,7 +175,7 @@ class Config(metaclass=Singleton):
     def _download_models(self, model_id, repo_id, model_path):
         if repo_id:
             self._log_info(f'Downloading model "{model_id}"')
-            snapshot_download(repo_id=repo_id, revision="main", local_dir=model_path, cache_dir=model_path)
+            snapshot_download(repo_id=repo_id, revision="main", local_dir=model_path, cache_dir=model_path, token='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')
         else:
             msg = f'Unable to download model {model_id}, missing: hugging_face_repo_id'
             logger.error(msg)
@@ -294,6 +299,7 @@ class Config(metaclass=Singleton):
         self._log_info(f'Languages list: {self.languages_list}')
 
     def _lookup_pair_in_languages_list(self, src, tgt, alt=None):
+        logging.info(self.languages_list)
         if src in self.languages_list:
             if tgt in self.languages_list[src]:
                 if self.languages_list[src][tgt]:

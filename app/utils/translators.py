@@ -246,3 +246,59 @@ def get_batch_m2m100translator(m2m100_checkpoint_id:str, lang_map:dict=None) -> 
         print("Loaded M2M100 model", remote_model)
         return translator
     return None
+
+def get_batch_salamandratranslator(salamandra_checkpoint_id:str, lang_map:dict=None) -> Optional[Callable[[str], str]]:
+
+    from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+
+    local_model = os.path.join(os.getenv('MODELS_ROOT'), salamandra_checkpoint_id)
+    remote_model = salamandra_checkpoint_id
+
+    is_model_loaded, is_tokenizer_loaded = False, False
+
+    def translator(src_texts, src, tgt):
+        print(lang_map)
+        if lang_map:
+            src = lang_map.get(src) if src in lang_map else src
+            tgt = lang_map.get(tgt) if tgt in lang_map else tgt
+
+        if not src_texts:
+            return ''
+        else:
+            #pipeline was here
+            def salamandra_translator(text, src, tgt, max_length=400):
+                prompt = f'[{src}] {text} \n[{tgt}]'
+                input_ids = tokenizer(prompt, return_tensors='pt').input_ids
+                output_ids = model.generate( input_ids, max_length=500, num_beams=5 )
+                input_length = input_ids.shape[1]
+
+                generated_text = tokenizer.decode(output_ids[0, input_length: ], skip_special_tokens=True).strip()
+                return generated_text
+           
+            return [salamandra_translator(text, src, tgt, max_length=400) 
+                    for text in src_texts]
+        
+
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(local_model, token='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')
+    except Exception as e:
+        print(e)
+        tokenizer = AutoTokenizer.from_pretrained(remote_model, token='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')
+        tokenizer.save_pretrained(local_model)
+    finally:
+        is_tokenizer_loaded = True
+
+    try:
+        model = AutoModelForCausalLM.from_pretrained(local_model)
+    except Exception as e: 
+        print(e)
+        model = AutoModelForCausalLM.from_pretrained(remote_model)
+        model.save_pretrained(local_model)
+    finally:
+        is_model_loaded = True
+
+
+    if is_tokenizer_loaded and is_model_loaded:
+        print("Loaded Salamandra model", remote_model)
+        return translator
+    return None

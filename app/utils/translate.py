@@ -33,6 +33,7 @@ def translate_text(model_id: str, text: str, src: str, tgt: str) -> Optional[str
             sentence_batch = config.loaded_models[pair]['translator'](sentence_batch, chainmodel_src, chainmodel_tgt)
             if DEVDEBUG: logger.debug(f'>translate_text:Pre-translate {pair}, {chainmodel_src}-{chainmodel_tgt} {sentence_batch}')
     
+    logging.info(list(model.keys()))
     # Preprocess
     for proc in model['preprocessors']:
         sentence_batch = [proc(s) for s in sentence_batch]
