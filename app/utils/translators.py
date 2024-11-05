@@ -280,10 +280,10 @@ def get_batch_salamandratranslator(salamandra_checkpoint_id:str, lang_map:dict=N
         
 
     try:
-        tokenizer = AutoTokenizer.from_pretrained(local_model, token='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')
+        tokenizer = AutoTokenizer.from_pretrained(local_model)
     except Exception as e:
         print(e)
-        tokenizer = AutoTokenizer.from_pretrained(remote_model, token='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')
+        tokenizer = AutoTokenizer.from_pretrained(remote_model)
         tokenizer.save_pretrained(local_model)
     finally:
         is_tokenizer_loaded = True

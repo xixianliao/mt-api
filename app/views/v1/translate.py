@@ -31,7 +31,6 @@ def fetch_model_data_from_request(request):
         tgt=tgt,
         alt_id=request.alt
     )
-    logging.info(model_id)
     compatible_model_ids = config._lookup_pair_in_languages_list(src, tgt, request.alt)
 
     if not compatible_model_ids:
