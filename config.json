@@ -204,7 +204,7 @@
       "model_type": "salamandra",
       "checkpoint_id": "salamandraTA-2B", 
       "hugging_face_repo_id": "BSC-LT/salamandraTA-2B",
-      "model_path": "BSC-LT/salamandraTA-2B",
+      "model_path": "salamandraTA-2B",
       "alt": "salamandra",      
       "multilingual": true,
       "load": true,
