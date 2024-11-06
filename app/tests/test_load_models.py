@@ -11,14 +11,37 @@ class TestLoadModels():
         
         self.config_data = {
             "languages": {
-                "es": "Spanish",
-                "ca": "Catalan",
-                "en": "English",
-                "fr": "French",
-                "de": "German",
-                "it": "Italian",
-                "pt": "Portuguese"
-            },
+            "es": "Spanish",
+            "ca": "Catalan",
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "it": "Italian",
+            "pt": "Portuguese",
+            "eu": "Euskera",
+            "gl": "Galician",
+            "bg": "Bulgarian",
+            "cz": "Czech",
+            "lt": "Lithuanian",
+            "cr": "Croatian",
+            "du": "Dutch",
+            "ro": "Romanian",
+            "da": "Danish",
+            "gr": "Greek",
+            "fi": "Finnish",
+            "hu": "Hungarian",
+            "sk": "Slovak",
+            "sl": "Slovenian",
+            "et": "Estonian",
+            "pl": "Polish",
+            "lv": "Latvian",
+            "sv": "Swedish",
+            "mt": "Maltese",
+            "ga": "Irish",
+            "arn": "Aranese",
+            "arg": "Aragonese",
+            "ast": "Asturian" 
+        },
             "models": [
                 {
                 "src": "ca",
@@ -39,14 +62,37 @@ class TestLoadModels():
         self.config = Config(config_data=self.config_data, load_all_models=True)
         # languages
         assert self.config.language_codes == {
-                "es": "Spanish",
-                "ca": "Catalan",
-                "en": "English",
-                "fr": "French",
-                "de": "German",
-                "it": "Italian",
-                "pt": "Portuguese"
-         }
+            "es": "Spanish",
+            "ca": "Catalan",
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "it": "Italian",
+            "pt": "Portuguese",
+            "eu": "Euskera",
+            "gl": "Galician",
+            "bg": "Bulgarian",
+            "cz": "Czech",
+            "lt": "Lithuanian",
+            "cr": "Croatian",
+            "du": "Dutch",
+            "ro": "Romanian",
+            "da": "Danish",
+            "gr": "Greek",
+            "fi": "Finnish",
+            "hu": "Hungarian",
+            "sk": "Slovak",
+            "sl": "Slovenian",
+            "et": "Estonian",
+            "pl": "Polish",
+            "lv": "Latvian",
+            "sv": "Swedish",
+            "mt": "Maltese",
+            "ga": "Irish",
+            "arn": "Aranese",
+            "arg": "Aragonese",
+            "ast": "Asturian" 
+        }
     
         assert self.config.languages_list == {'ca': {'es': ['ca-es']}}
 

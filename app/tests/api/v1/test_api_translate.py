@@ -25,8 +25,31 @@ class TestTranslateApiV1(APIBaseTestCase):
                 "fr": "French",
                 "de": "German",
                 "it": "Italian",
-                "pt": "Portuguese"
-         }
+                "pt": "Portuguese",
+                "eu": "Euskera",
+                "gl": "Galician",
+                "bg": "Bulgarian",
+                "cz": "Czech",
+                "lt": "Lithuanian",
+                "cr": "Croatian",
+                "du": "Dutch",
+                "ro": "Romanian",
+                "da": "Danish",
+                "gr": "Greek",
+                "fi": "Finnish",
+                "hu": "Hungarian",
+                "sk": "Slovak",
+                "sl": "Slovenian",
+                "et": "Estonian",
+                "pl": "Polish",
+                "lv": "Latvian",
+                "sv": "Swedish",
+                "mt": "Maltese",
+                "ga": "Irish",
+                "arn": "Aranese",
+                "arg": "Aragonese",
+                "ast": "Asturian" 
+            }
 
     def test_translate_text_valid_code(self):
         with TestClient(self.app) as client:

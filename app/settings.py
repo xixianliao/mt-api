@@ -11,3 +11,6 @@ DEFAULT_NLLB_MODEL_TYPE = "nllb-200-distilled-600M" # OR "nllb-200-distilled-1.3
 #Specify which M2M100 model to load here by default (if not specified in config as checkpoint_id)
 DEFAULT_M2M100_MODEL_TYPE = "m2m100_418M"
 
+#Specify which SALAMANDRA model to load here by default (if not specified in config as checkpoint_id)
+DEFAULT_SALAMANDRA_MODEL_TYPE = "salamandraTA-2B" 
+
