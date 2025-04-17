@@ -291,7 +291,6 @@ class Config(metaclass=Singleton):
                 self.languages_list[source][target].append(model_id)
                 self.pair_to_model_id_map[model_id] = main_model_id
 
-        self._log_info(f'Languages list: {self.languages_list}')
 
     def _lookup_pair_in_languages_list(self, src, tgt, alt=None):
         if src in self.languages_list:

@@ -33,7 +33,7 @@ from app.utils.utils import (
 )
 
 from app.settings import DEFAULT_NLLB_MODEL_TYPE, DEFAULT_M2M100_MODEL_TYPE, DEFAULT_SALAMANDRA_MODEL_TYPE
-from app.constants import NLLB_CHECKPOINT_IDS, M2M100_CHECKPOINT_IDS, SALAMANDRA_CHECKPOINT_IDS
+from app.constants import NLLB_CHECKPOINT_IDS, M2M100_CHECKPOINT_IDS, SALAMANDRA_CHECKPOINT_IDS, SALAMANDRA_INSTRUCT_CHECKPOINT_IDS
 
 def load_model_sentence_segmenter(
     model: Dict,
@@ -277,11 +277,10 @@ def load_model_translator(
                 )
                 raise ModelLoadingException
 
-        elif model_config['model_type'] == 'salamandra-instruct':
+        elif model_config['model_type'] == 'salamandra_instruct':
             salamandra_checkpoint_id = model_config.get('checkpoint_id') if 'checkpoint_id' in model_config else DEFAULT_SALAMANDRA_MODEL_TYPE
-
             if len(model_config.get('checkpoint_id').split('/')) == 1:
-                if salamandra_checkpoint_id not in SALAMANDRA_CHECKPOINT_IDS:
+                if salamandra_checkpoint_id not in SALAMANDRA_INSTRUCT_CHECKPOINT_IDS:
                     warn(
                         f'No checkpoint exists for base salamandra model: BSC-LT/{salamandra_checkpoint_id}. Skipping load.'
                     )

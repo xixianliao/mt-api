@@ -311,11 +311,11 @@
                         } 
     },
     {
-      "model_type": "salamandra-instruct",
+      "model_type": "salamandra_instruct",
       "checkpoint_id": "salamandraTA-7b-instruct", 
       "hugging_face_repo_id": "BSC-LT/salamandraTA-7b-instruct",
       "model_path": "salamandraTA-7b-instruct",
-      "alt": "salamandra-instruct",      
+      "alt": "salamandra_instruct",      
       "multilingual": true,
       "load": true,
       "sentence_split": "nltk",

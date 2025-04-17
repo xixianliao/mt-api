@@ -268,7 +268,7 @@ def get_batch_salamandratranslator(salamandra_checkpoint_id:str, lang_map:dict=N
             #pipeline was here
             def salamandra_translator(text, src, tgt, max_length=400):
                 prompt = f'[{src}] {text} \n[{tgt}]'
-                input_ids = tokenizer(prompt, return_tensors='pt').input_ids
+                input_ids = tokenizer(prompt, return_tensors='pt').input_ids.to(model.device)
                 output_ids = model.generate( input_ids, max_length=500, num_beams=5 )
                 input_length = input_ids.shape[1]
 
@@ -289,10 +289,10 @@ def get_batch_salamandratranslator(salamandra_checkpoint_id:str, lang_map:dict=N
         is_tokenizer_loaded = True
 
     try:
-        model = AutoModelForCausalLM.from_pretrained(local_model)
+        model = AutoModelForCausalLM.from_pretrained(local_model, device_map="auto")
     except Exception as e: 
         print(e)
-        model = AutoModelForCausalLM.from_pretrained(remote_model)
+        model = AutoModelForCausalLM.from_pretrained(remote_model, device_map="auto")
         model.save_pretrained(local_model)
     finally:
         is_model_loaded = True
@@ -329,7 +329,7 @@ def get_batch_salamandra_instruct_translator(salamandra_inst_checkpoint_id:str, 
             def salamandra_inst_translator(text, src, tgt, max_length=400):
                                 
                 prompt = f"Translate the following text from {src} into {tgt}.\n{src}: {text} \n{tgt}:"
-                message = [ { "role": "user", "content": text } ]
+                message = [ { "role": "user", "content": prompt } ]
                 date_string = datetime.today().strftime('%Y-%m-%d')
 
                 prompt = tokenizer.apply_chat_template(
