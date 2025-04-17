@@ -14,3 +14,6 @@ DEFAULT_M2M100_MODEL_TYPE = "m2m100_418M"
 #Specify which SALAMANDRA model to load here by default (if not specified in config as checkpoint_id)
 DEFAULT_SALAMANDRA_MODEL_TYPE = "salamandraTA-2B" 
 
+
+#Specify which SALAMANDRA model to load here by default (if not specified in config as checkpoint_id)
+DEFAULT_SALAMANDRA_INSTRUCT_MODEL_TYPE = "salamandraTA-7b-instruct" 

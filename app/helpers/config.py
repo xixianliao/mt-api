@@ -148,7 +148,7 @@ class Config(metaclass=Singleton):
     def _load_models(self, load_all, models_to_load) -> None:
         for model_config in self.config_data['models']:
             _, _, model_id = self._get_ser_tgt_model_id(model_config)
-
+            
             if not load_all and model_id not in models_to_load:
                 continue
 

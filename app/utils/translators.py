@@ -302,3 +302,76 @@ def get_batch_salamandratranslator(salamandra_checkpoint_id:str, lang_map:dict=N
         print("Loaded Salamandra model", remote_model)
         return translator
     return None
+
+
+def get_batch_salamandra_instruct_translator(salamandra_inst_checkpoint_id:str, lang_map:dict=None) -> Optional[Callable[[str], str]]:
+
+    from datetime import datetime
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    import transformers
+    import torch
+
+    local_model = os.path.join(os.getenv('MODELS_ROOT'), salamandra_inst_checkpoint_id)
+    remote_model = salamandra_inst_checkpoint_id
+
+    is_model_loaded, is_tokenizer_loaded = False, False
+
+    def translator(src_texts, src, tgt):
+        print(lang_map)
+        if lang_map:
+            src = lang_map.get(src) if src in lang_map else src
+            tgt = lang_map.get(tgt) if tgt in lang_map else tgt
+
+        if not src_texts:
+            return ''
+        else:
+            #pipeline was here
+            def salamandra_inst_translator(text, src, tgt, max_length=400):
+                                
+                prompt = f"Translate the following text from {src} into {tgt}.\n{src}: {text} \n{tgt}:"
+                message = [ { "role": "user", "content": text } ]
+                date_string = datetime.today().strftime('%Y-%m-%d')
+
+                prompt = tokenizer.apply_chat_template(
+                        message,
+                        tokenize=False,
+                        add_generation_prompt=True,
+                        date_string=date_string
+                )
+                inputs = tokenizer.encode(prompt, add_special_tokens=False, return_tensors="pt")
+                input_length = inputs.shape[1]
+                outputs = model.generate(input_ids=inputs.to(model.device), 
+                         max_new_tokens=400,
+                         early_stopping=True,
+                         num_beams=5)
+                
+                generated_text = tokenizer.decode(outputs[0, input_length:], skip_special_tokens=True)
+                return generated_text
+
+            return [salamandra_inst_translator(text, src, tgt, max_length=400) 
+                    for text in src_texts]
+        
+
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(local_model)
+    except Exception as e:
+        print(e)
+        tokenizer = AutoTokenizer.from_pretrained(remote_model)
+        tokenizer.save_pretrained(local_model)
+    finally:
+        is_tokenizer_loaded = True
+
+    try:
+        model = AutoModelForCausalLM.from_pretrained(local_model, device_map="auto", torch_dtype=torch.bfloat16)
+    except Exception as e: 
+        print(e)
+        model = AutoModelForCausalLM.from_pretrained(remote_model, device_map="auto", torch_dtype=torch.bfloat16)
+        model.save_pretrained(local_model)
+    finally:
+        is_model_loaded = True
+
+
+    if is_tokenizer_loaded and is_model_loaded:
+        print("Loaded Salamandra Instructed model", remote_model)
+        return translator
+    return None

@@ -23,6 +23,7 @@ from app.utils.translators import (
     get_batch_nllbtranslator,
     get_batch_m2m100translator,
     get_batch_salamandratranslator,
+    get_batch_salamandra_instruct_translator,
     dummy_translator,
     get_custom_translator,
 )
@@ -275,7 +276,30 @@ def load_model_translator(
                     f'Failed to load salamandra-huggingface model for {model_id}. Skipping load.'
                 )
                 raise ModelLoadingException
-            
+
+        elif model_config['model_type'] == 'salamandra-instruct':
+            salamandra_checkpoint_id = model_config.get('checkpoint_id') if 'checkpoint_id' in model_config else DEFAULT_SALAMANDRA_MODEL_TYPE
+
+            if len(model_config.get('checkpoint_id').split('/')) == 1:
+                if salamandra_checkpoint_id not in SALAMANDRA_CHECKPOINT_IDS:
+                    warn(
+                        f'No checkpoint exists for base salamandra model: BSC-LT/{salamandra_checkpoint_id}. Skipping load.'
+                    )
+                    raise ModelLoadingException
+                salamandra_checkpoint_id = 'BSC-LT/' + salamandra_checkpoint_id
+                warn(f'Full model id: {salamandra_checkpoint_id}')
+
+            translator = get_batch_salamandra_instruct_translator(salamandra_checkpoint_id, lang_map=model_config.get('lang_code_map'))
+            if translator:
+                model['translator'] = translator
+                msg += '-salamandra-huggingface-' + salamandra_checkpoint_id
+            else:
+                warn(
+                    f'Failed to load salamandra-huggingface model for {model_id}. Skipping load.'
+                )
+                raise ModelLoadingException
+
+
         elif model_config['model_type'] == 'dummy':
             msg += '-dummy'
             model['translator'] = dummy_translator
