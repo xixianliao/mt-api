@@ -148,7 +148,7 @@ class Config(metaclass=Singleton):
     def _load_models(self, load_all, models_to_load) -> None:
         for model_config in self.config_data['models']:
             _, _, model_id = self._get_ser_tgt_model_id(model_config)
-
+            
             if not load_all and model_id not in models_to_load:
                 continue
 
@@ -291,7 +291,6 @@ class Config(metaclass=Singleton):
                 self.languages_list[source][target].append(model_id)
                 self.pair_to_model_id_map[model_id] = main_model_id
 
-        self._log_info(f'Languages list: {self.languages_list}')
 
     def _lookup_pair_in_languages_list(self, src, tgt, alt=None):
         if src in self.languages_list:
